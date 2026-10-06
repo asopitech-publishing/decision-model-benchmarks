@@ -1,0 +1,315 @@
+{
+  "source": "https://dev.classmethod.jp/articles/strands-decider-2b-m4-mac-kiro-crew/",
+  "language": "ja",
+  "variant": "B_desc",
+  "labels": "Claude Opus 5.5-assigned in the cited article, not human ground truth",
+  "questions": {
+    "tier": {
+      "type": "choice",
+      "instructions": "How hard is this request for an AI coding assistant? Answer one of: simple = a short, local, mechanical request answerable in one step -- a rename, a lookup, a small edit, a direct factual question; medium = ordinary work over a few files or steps -- write a function, explain some code, fix a bug whose cause is already named; complex = work needing a plan, a trade-off or reasoning across a whole system -- design, architecture, a diagnosis with no named cause, a risky refactor.\nBeing wrong in the two directions does not cost the same. A turn put in a lower tier than it needs gets less room to work in and a worse answer; a turn put higher only costs more. So answer simple only when the request is self-contained and you can see the whole of it -- a request that is a plan, a judgement call, several instructions at once, or that names work you cannot see, is not simple however short it is.",
+      "criteria": {
+        "simple": "a short, local, mechanical request answerable in one step -- a rename, a lookup, a small edit, a direct factual question",
+        "medium": "ordinary work over a few files or steps -- write a function, explain some code, fix a bug whose cause is already named",
+        "complex": "work needing a plan, a trade-off or reasoning across a whole system -- design, architecture, a diagnosis with no named cause, a risky refactor"
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "P01",
+      "state": {
+        "message": "（スクリーンショットを添付）この画像に写っているエラーメッセージを文字に起こして"
+      },
+      "gold": {
+        "tier": "simple"
+      },
+      "accepted": {
+        "tier": [
+          "simple",
+          "medium"
+        ]
+      }
+    },
+    {
+      "id": "P02",
+      "state": {
+        "message": "今日はここまで。続きは明日やるので、作業メモを残しておいて"
+      },
+      "gold": {
+        "tier": "medium"
+      },
+      "accepted": {
+        "tier": [
+          "medium",
+          "simple"
+        ]
+      }
+    },
+    {
+      "id": "P03",
+      "state": {
+        "message": "このリポジトリで使っている Node.js のバージョンは？"
+      },
+      "gold": {
+        "tier": "simple"
+      },
+      "accepted": {
+        "tier": [
+          "simple"
+        ]
+      }
+    },
+    {
+      "id": "P04",
+      "state": {
+        "message": "その方針はやめて、さっき出してくれた別案で進めて"
+      },
+      "gold": {
+        "tier": "medium"
+      },
+      "accepted": {
+        "tier": [
+          "medium",
+          "complex"
+        ]
+      }
+    },
+    {
+      "id": "P05",
+      "state": {
+        "message": "A案とC案は進めていい。B案は影響範囲を調べてから決めたいので、まず調査結果だけ出して"
+      },
+      "gold": {
+        "tier": "medium"
+      },
+      "accepted": {
+        "tier": [
+          "medium",
+          "complex"
+        ]
+      }
+    },
+    {
+      "id": "P06",
+      "state": {
+        "message": "ECSタスクが起動直後に止まる。原因わかる？"
+      },
+      "gold": {
+        "tier": "complex"
+      },
+      "accepted": {
+        "tier": [
+          "complex",
+          "medium"
+        ]
+      }
+    },
+    {
+      "id": "P07",
+      "state": {
+        "message": "https://example.com/docs/changelog の更新内容を3行で要約して"
+      },
+      "gold": {
+        "tier": "simple"
+      },
+      "accepted": {
+        "tier": [
+          "simple",
+          "medium"
+        ]
+      }
+    },
+    {
+      "id": "P08",
+      "state": {
+        "message": "utils/date.ts の formatDate 関数を formatDateTime にリネームして、呼び出し箇所もそろえて"
+      },
+      "gold": {
+        "tier": "simple"
+      },
+      "accepted": {
+        "tier": [
+          "simple",
+          "medium"
+        ]
+      }
+    },
+    {
+      "id": "P09",
+      "state": {
+        "message": "APIのレスポンスが特定の時間帯だけ遅くなる。CloudWatchのメトリクスとアクセスログを見て、原因の候補を挙げて"
+      },
+      "gold": {
+        "tier": "complex"
+      },
+      "accepted": {
+        "tier": [
+          "complex",
+          "medium"
+        ]
+      }
+    },
+    {
+      "id": "P10",
+      "state": {
+        "message": "この一文「本番環境への反映は、承認フローを経たうえで実施した」で意味は通じる？"
+      },
+      "gold": {
+        "tier": "simple"
+      },
+      "accepted": {
+        "tier": [
+          "simple",
+          "medium"
+        ]
+      }
+    },
+    {
+      "id": "P11",
+      "state": {
+        "message": "静的サイトの一部のページを、会員登録した人だけが見られるようにしたい。CloudFrontの署名付きCookieで実現できる？"
+      },
+      "gold": {
+        "tier": "medium"
+      },
+      "accepted": {
+        "tier": [
+          "medium",
+          "complex"
+        ]
+      }
+    },
+    {
+      "id": "P12",
+      "state": {
+        "message": "（下書きを添付）この段落、です・ます調とだ・である調が混ざっているので、です・ます調にそろえて"
+      },
+      "gold": {
+        "tier": "simple"
+      },
+      "accepted": {
+        "tier": [
+          "simple",
+          "medium"
+        ]
+      }
+    },
+    {
+      "id": "P13",
+      "state": {
+        "message": "Aurora MySQLのメジャーバージョンアップを予定している。ブルー/グリーンデプロイを使う方法と、スナップショットから新しいクラスターを作る方法で、切り替え時の停止時間、ロールバックのしやすさ、アプリ側の接続先変更の要否を比べて、どちらを選ぶべきか教えて"
+      },
+      "gold": {
+        "tier": "complex"
+      },
+      "accepted": {
+        "tier": [
+          "complex"
+        ]
+      }
+    },
+    {
+      "id": "P14",
+      "state": {
+        "message": "検証用にEC2を1台起動して、Nginxを入れ、負荷試験ツールで1秒あたりのリクエスト数を3回測って。セキュリティグループは自分のIPからだけ許可すること。終わったらインスタンスは停止ではなく削除して、結果は経過秒と終了コード付きでファイルに残して"
+      },
+      "gold": {
+        "tier": "complex"
+      },
+      "accepted": {
+        "tier": [
+          "complex",
+          "medium"
+        ]
+      }
+    },
+    {
+      "id": "P15",
+      "state": {
+        "message": "テストコードにコメントを多めに書くのはいいと思う。でも、READMEにまで同じ説明を載せる必要はある？ 内容が重複して、更新漏れの原因になる気がする。どう思う？"
+      },
+      "gold": {
+        "tier": "medium"
+      },
+      "accepted": {
+        "tier": [
+          "medium",
+          "simple"
+        ]
+      }
+    },
+    {
+      "id": "P16",
+      "state": {
+        "message": "このワークフロー、deployジョブに needs: build を付けなくても今まで問題なく動いていた。付ける必要はある？\n\n```yaml\njobs:\n  build:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - run: make build\n  deploy:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - run: make deploy\n```"
+      },
+      "gold": {
+        "tier": "medium"
+      },
+      "accepted": {
+        "tier": [
+          "medium",
+          "simple"
+        ]
+      }
+    },
+    {
+      "id": "P17",
+      "state": {
+        "message": "【目的】\n先月からS3の請求額が約1.5倍になった原因を特定したい。\nCost Explorerでは、PUTとLISTのリクエスト料金が増えている。一方で、保存しているデータ量はほとんど変わっていない。\n\n【これまでに確認したこと】\n- 新しいバケットは作っていない\n- バッチ処理の実行間隔を1時間ごとから5分ごとに変えた\n- 同じ時期に、ログ転送ツールのバージョンを上げた\n\n【お願い】\n1. リクエスト数が増える原因として考えられるものを洗い出して\n2. どのバケット・どの処理がリクエストを出しているか、特定する手順を順番に示して\n3. 恒久対策の案を、費用の目安付きで出して"
+      },
+      "gold": {
+        "tier": "complex"
+      },
+      "accepted": {
+        "tier": [
+          "complex"
+        ]
+      }
+    },
+    {
+      "id": "P18",
+      "state": {
+        "message": "（プルリクエストの差分を添付）このプルリクエストをレビューして。\n\n観点:\n- 例外が握りつぶされている箇所がないか\n- 同時に実行されたときに競合しないか\n- 既存のAPIの互換性を壊していないか\n- テストが変更内容を十分にカバーしているか\n- 命名とコメントが実装と食い違っていないか\n\n出力形式: 指摘ごとに「ファイル名と行」「問題」「修正案」を1組で書き、重要度を高・中・低で付けること。コードは書き換えず、指摘だけを返して。"
+      },
+      "gold": {
+        "tier": "complex"
+      },
+      "accepted": {
+        "tier": [
+          "complex",
+          "medium"
+        ]
+      }
+    },
+    {
+      "id": "P19",
+      "state": {
+        "message": "CIのビルドが急に落ちるようになった。昨日までは通っていて、こちらのコードは変えていない。ログを貼るので原因を教えて。\n\n[Container] 2026/09/18 01:12:04.118 Running command python --version\nPython 3.9.19\n[Container] 2026/09/18 01:12:06.511 Running command pip install -r requirements.txt\nCollecting boto3>=1.34\n  Downloading boto3-1.40.12-py3-none-any.whl (139 kB)\nCollecting pyyaml\n  Downloading PyYAML-6.0.3-cp39-cp39-manylinux_2_17_x86_64.whl (737 kB)\nCollecting sample-report-lib\n  Downloading sample_report_lib-3.0.0.tar.gz (52 kB)\n  Installing build dependencies: started\n  Installing build dependencies: finished with status 'done'\n  Getting requirements to build wheel: started\n  Getting requirements to build wheel: finished with status 'error'\n  error: subprocess-exited-with-error\n\n  × Getting requirements to build wheel did not run successfully.\n  │ exit code: 1\n  ╰─> [6 lines of output]\n      Traceback (most recent call last):\n        File \"<string>\", line 14, in <module>\n        File \"setup.py\", line 9, in <module>\n          python_requires=\">=3.10\",\n      RuntimeError: sample-report-lib requires Python >=3.10 (running 3.9.19)\n      [end of output]\n\nerror: subprocess-exited-with-error\n\n× Getting requirements to build wheel did not run successfully.\n│ exit code: 1\n╰─> See above for output.\n[Container] 2026/09/18 01:12:19.803 Command did not exit successfully pip install -r requirements.txt exit status 1\n[Container] 2026/09/18 01:12:19.809 Phase complete: INSTALL State: FAILED\n[Container] 2026/09/18 01:12:19.809 Phase context status code: COMMAND_EXECUTION_ERROR Message: Error while executing command: pip install -r requirements.txt. Reason: exit status 1"
+      },
+      "gold": {
+        "tier": "medium"
+      },
+      "accepted": {
+        "tier": [
+          "medium",
+          "complex"
+        ]
+      }
+    },
+    {
+      "id": "P20",
+      "state": {
+        "message": "相談。いま検証用と本番用のワークロードが1つのAWSアカウントに同居している。これを検証・ステージング・本番の3アカウントに分けたい。前提と制約は次のとおり。\n\n- 既存リソースはCloudFormationと手作業が混在している。スタックは約40本あり、スタック間でExport/ImportValueの依存が多い\n- 本番は24時間稼働で、停止を伴う作業ができるのは月1回の保守枠（深夜2時間）だけ\n- RDS（PostgreSQL）には本番データが入っているので、検証アカウントへは匿名化してから渡す必要がある\n- 外部の決済サービスからのWebhookを固定IPで受けており、IPを変えるには決済サービス側への事前申請が要る\n- ドメインはRoute 53で管理し、証明書はACMで発行している\n- 監査の都合で、CloudTrailのログは別の集約用アカウントに集めたい\n\nお願いしたいこと:\n1. 移行の順番（どのリソースをどのアカウントへ、どの順で動かすか）を段階に分けて示して\n2. 各段階で止まる可能性があるサービスと、止まる時間の目安\n3. スタック間の依存を切る進め方。IaCを書き直す範囲と、手作業のまま残す範囲の線引き\n4. Webhookの受け口を移すときに、決済サービス側へ事前に申請すべき項目\n5. 段階ごとのロールバック方法\n6. 想定されるリスクと、事前に確認しておくべき点\n\nまずは全体像を表にまとめてから詳細を書いて。費用の増減も、概算でわかれば知りたい。"
+      },
+      "gold": {
+        "tier": "complex"
+      },
+      "accepted": {
+        "tier": [
+          "complex"
+        ]
+      }
+    }
+  ]
+}

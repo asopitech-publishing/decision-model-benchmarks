@@ -1,0 +1,53 @@
+{
+  "questions": {
+    "department": {
+      "type": "choice",
+      "instructions": "この問い合わせを担当すべき部署はどこですか？",
+      "criteria": {
+        "billing": "請求書、支払い、返金、二重請求、決済の問い合わせ",
+        "technical": "障害、バグ、システムエラー、アプリやAPIの不具合",
+        "account": "アカウント、登録情報、権限、ログイン管理の問い合わせ",
+        "sales": "価格、新規契約、購入、見積もり、プラン比較の問い合わせ"
+      }
+    },
+    "urgency": {
+      "type": "score",
+      "instructions": "この問い合わせの緊急度はどの程度ですか？",
+      "criteria": [
+        "低い：急ぎではなく、数日待てる",
+        "通常：数日以内の対応が望ましい",
+        "高い：業務停止、重大なアクセス障害、または当日対応が必要"
+      ]
+    },
+    "refund_request": {
+      "type": "noul",
+      "instructions": "顧客は返金を求めていますか？"
+    }
+  },
+  "cases": [
+    {"id":"b01","state":"3月分の請求が同じ日に二重に決済されています。重複分を返金してください。","gold":{"department":"billing","urgency":1,"refund_request":true}},
+    {"id":"b02","state":"先月の請求書をPDFで再送してもらえますか。急ぎではありません。","gold":{"department":"billing","urgency":0,"refund_request":false}},
+    {"id":"b03","state":"登録しているカードで支払いが失敗しました。原因を確認したいです。","gold":{"department":"billing","urgency":1,"refund_request":false}},
+    {"id":"b04","state":"身に覚えのない請求がありました。至急停止して、支払った金額を返金してください。","gold":{"department":"billing","urgency":2,"refund_request":true}},
+    {"id":"b05","state":"請求書の会社名が旧社名のままなので、正しい宛名に修正してください。","gold":{"department":"billing","urgency":1,"refund_request":false}},
+    {"id":"b06","state":"次回の請求日と支払い期限を教えてください。","gold":{"department":"billing","urgency":0,"refund_request":false}},
+    {"id":"t01","state":"本番APIが500エラーを返し続けており、サービスが完全に停止しています。至急対応してください。","gold":{"department":"technical","urgency":2,"refund_request":false}},
+    {"id":"t02","state":"管理画面の保存ボタンを押すと、ときどきエラーになります。","gold":{"department":"technical","urgency":1,"refund_request":false}},
+    {"id":"t03","state":"データのエクスポートがタイムアウトして完了しません。数日以内に直ると助かります。","gold":{"department":"technical","urgency":1,"refund_request":false}},
+    {"id":"t04","state":"アプリを開くと毎回クラッシュして、仕事を始められません。","gold":{"department":"technical","urgency":2,"refund_request":false}},
+    {"id":"t05","state":"次回のメンテナンス予定と、利用できない時間帯を確認したいです。","gold":{"department":"technical","urgency":0,"refund_request":false}},
+    {"id":"t06","state":"Webhookの再送処理が失敗する不具合を調査してください。","gold":{"department":"technical","urgency":1,"refund_request":false}},
+    {"id":"a01","state":"アカウントに登録しているメールアドレスを変更したいです。","gold":{"department":"account","urgency":0,"refund_request":false}},
+    {"id":"a02","state":"パスワードをリセットしてもログインできず、今すぐ管理画面に入れません。","gold":{"department":"account","urgency":2,"refund_request":false}},
+    {"id":"a03","state":"チームに新しいメンバーを追加して、閲覧権限を設定したいです。","gold":{"department":"account","urgency":1,"refund_request":false}},
+    {"id":"a04","state":"使っていないアカウントを削除する方法を教えてください。","gold":{"department":"account","urgency":0,"refund_request":false}},
+    {"id":"a05","state":"担当者に請求情報だけ見せたいのですが、権限をどう設定すればよいですか。","gold":{"department":"account","urgency":1,"refund_request":false}},
+    {"id":"a06","state":"契約者の会社名が変わったので、アカウント情報を更新したいです。","gold":{"department":"account","urgency":0,"refund_request":false}},
+    {"id":"s01","state":"法人で利用する場合の料金と、正式な見積もりを教えてください。","gold":{"department":"sales","urgency":0,"refund_request":false}},
+    {"id":"s02","state":"新しいチームで契約を始めたいです。トライアルの条件を確認できますか。","gold":{"department":"sales","urgency":1,"refund_request":false}},
+    {"id":"s03","state":"上位プランを購入するにはどうすればよいですか。","gold":{"department":"sales","urgency":0,"refund_request":false}},
+    {"id":"s04","state":"大量導入を検討しています。ボリュームディスカウントの相談をしたいです。","gold":{"department":"sales","urgency":1,"refund_request":false}},
+    {"id":"s05","state":"スタンダードとプロの機能差を比較して、どちらを契約するか決めたいです。","gold":{"department":"sales","urgency":0,"refund_request":false}},
+    {"id":"s06","state":"現在の契約を上位プランへ変更する場合の価格と手続きを教えてください。","gold":{"department":"sales","urgency":1,"refund_request":false}}
+  ]
+}
