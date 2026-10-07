@@ -101,6 +101,8 @@ def _request(model: str, case: dict, questions: dict, key: str | None) -> dict:
               "raw_response_sha256": hashlib.sha256(raw_body).hexdigest(),
               "response_headers": {name: value for name, value in response_headers.items()
                                    if name.lower() in {"content-type", "date", "x-request-id", "x-typesafe-request-id"}}}
+    if response_headers.get("X-Inference-Batch-Size") is not None:
+        record["inference_batch_size"] = int(response_headers["X-Inference-Batch-Size"])
     if status == 200 and isinstance(data, dict):
         record["answers"] = data.get("answers")
         record["response_model"] = data.get("model")

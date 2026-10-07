@@ -27,6 +27,7 @@ class FakeResponse(io.BytesIO):
         self.headers = Message()
         self.headers["Content-Type"] = "application/json"
         self.headers["X-Request-Id"] = "req-test"
+        self.headers["X-Inference-Batch-Size"] = "2"
 
 
 class RawCaptureTests(unittest.TestCase):
@@ -42,6 +43,7 @@ class RawCaptureTests(unittest.TestCase):
         self.assertEqual(base64.b64decode(result["raw_response_base64"]), raw)
         self.assertEqual(result["usage"]["input_tokens"], 123)
         self.assertEqual(result["response_headers"]["X-Request-Id"], "req-test")
+        self.assertEqual(result["inference_batch_size"], 2)
         self.assertNotIn("secret-test-key", json.dumps(result))
 
     def test_http_error_preserves_body(self) -> None:
