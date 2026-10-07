@@ -35,6 +35,7 @@ MODEL_IDS = {
     "laya": "laya-multilingual-q8",
     "jev": "jev-latest",
 }
+LAYA_IDS = {"fp16": "laya-multilingual", "q8": "laya-multilingual-q8"}
 STRANDS_IDS = {version: f"strands-decider-2B-hobson-{version}"
                for version in ("v19", "v21")}
 
@@ -54,6 +55,19 @@ def _key() -> str | None:
             if value and value != "replace-with-your-typesafe-api-key":
                 return value
     return None
+
+
+def _check_laya_health(precision: str, head_max_len: int) -> dict:
+    url = URLS["laya"].rsplit("/v1/", 1)[0] + "/healthz"
+    with urllib.request.urlopen(url, timeout=5) as response:
+        health = json.load(response)
+    expected_dtype = "float16" if precision == "fp16" else "int8_mixed"
+    if (health.get("laya_dtype") != expected_dtype
+            or health.get("head_max_len") != head_max_len
+            or health.get("model_instances") != 1):
+        raise RuntimeError("Laya server precision, head budget, or model count mismatch")
+    return {key: health[key] for key in
+            ("laya_dtype", "head_max_len", "model_instances", "max_batch_requests")}
 
 
 def _percentile(values: list[float], quantile: float) -> float | None:
@@ -206,6 +220,10 @@ def main() -> None:
     parser.add_argument("--model", choices=URLS, required=True)
     parser.add_argument("--strands-version", choices=STRANDS_IDS, default=None,
                         help="Strands checkpoint version (default: v21)")
+    parser.add_argument("--laya-precision", choices=LAYA_IDS, default=None,
+                        help="Laya checkpoint precision (default: q8)")
+    parser.add_argument("--expect-laya-head-max-len", type=int, default=None,
+                        help="verify the Laya server health endpoint before measurement")
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--fixture", type=Path, default=DEFAULT_FIXTURE)
     parser.add_argument("--parallel", type=int, nargs="*", default=[2, 4, 8])
@@ -217,12 +235,19 @@ def main() -> None:
     args = parser.parse_args()
     if args.strands_version and args.model != "strands":
         parser.error("--strands-version applies only to --model strands")
+    if (args.laya_precision is not None or args.expect_laya_head_max_len is not None) and args.model != "laya":
+        parser.error("Laya precision and head budget apply only to --model laya")
+    laya_precision = args.laya_precision or "q8"
     model_id = (STRANDS_IDS[args.strands_version or "v21"] if args.model == "strands"
+                else LAYA_IDS[laya_precision] if args.model == "laya"
                 else MODEL_IDS[args.model])
     if args.rescore and args.append_parallel:
         parser.error("--rescore and --append-parallel cannot be combined")
     fixture = json.loads(args.fixture.read_text())
     cases, questions = fixture["cases"], fixture["questions"]
+    laya_health = (_check_laya_health(laya_precision, args.expect_laya_head_max_len)
+                   if args.model == "laya" and args.expect_laya_head_max_len is not None
+                   and not args.rescore else None)
     if args.rescore:
         result = json.loads(args.out.read_text())
         if result["model"] != args.model or result.get("model_id_requested") != model_id:
@@ -258,6 +283,8 @@ def main() -> None:
         parallel = [_run(args.model, cases, questions, key, workers, model_id=model_id)
                     for workers in args.parallel if workers > 1]
         result = {"model": args.model, "model_id_requested": model_id,
+                  "laya_precision": laya_precision if args.model == "laya" else None,
+                  "server_health": laya_health,
                   "fixture": str(args.fixture.resolve()), "question_count_per_request": len(questions),
                   "timestamp_utc": __import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat(),
                   "quality": _quality(sequential["records"], cases, questions),

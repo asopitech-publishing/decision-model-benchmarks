@@ -47,14 +47,21 @@ def deltas(reference, actual):
     return probability_delta, score_delta
 
 
-def load_backend(kind, model_path, largest_batch, question_count):
+def load_backend(kind, model_path, largest_batch, question_count, *, laya_dtype="int8_mixed",
+                 laya_head_max_len=None):
     if kind == "laya":
         from laya_mlx.agent import load
         from laya_batch import predict_many
-        agent = load(model_path, dtype="int8_mixed", cache_prompts=False,
+        agent = load(model_path, dtype=laya_dtype, cache_prompts=False,
                      batch_size=largest_batch * question_count)
+        if laya_head_max_len is not None:
+            if not 4 < laya_head_max_len < agent.cfg["max_len"]:
+                raise ValueError("laya head_max_len must be between 4 and max_len")
+            agent.cfg["head_max_len"] = laya_head_max_len
         return agent, lambda packet: agent.predict(packet["state"], packet["questions"]), \
             predict_many, question_count
+    if laya_dtype != "int8_mixed" or laya_head_max_len is not None:
+        raise ValueError("Laya precision and head budget apply only to --model-kind laya")
     if kind == "strands":
         from strands_decider.infer import load_engine
         from strands_decider.schema import SystemOneRequest
@@ -79,6 +86,8 @@ def main():
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--sizes", type=int, nargs="+", default=[1, 2, 4, 8])
     parser.add_argument("--repeats", type=int, default=5)
+    parser.add_argument("--laya-dtype", choices=["float16", "int8_mixed"], default="int8_mixed")
+    parser.add_argument("--laya-head-max-len", type=int)
     args = parser.parse_args()
     if any(size < 1 for size in args.sizes) or len(set(args.sizes)) != len(args.sizes) or args.repeats < 1:
         parser.error("sizes must be distinct positive integers and repeats must be positive")
@@ -88,7 +97,8 @@ def main():
     if not cases or not questions or len({case["id"] for case in cases}) != len(cases):
         parser.error("fixture needs nonempty questions and uniquely identified cases")
     agent, baseline_call, batch_call, rows_per_request = load_backend(
-        args.model_kind, args.model, max(args.sizes), len(questions)
+        args.model_kind, args.model, max(args.sizes), len(questions),
+        laya_dtype=args.laya_dtype, laya_head_max_len=args.laya_head_max_len,
     )
     import mlx.core as mx
     packets = {case["id"]: {"state": case["state"], "questions": questions} for case in cases}
@@ -106,6 +116,8 @@ def main():
         "fixture": f"benchmarks/{args.fixture.name}", "model_instances": 1,
         "batching": "independent requests in one model forward pass",
         "cache_prompts": False, "shape_warmup": "one untimed fixture pass per batch size",
+        "laya_dtype": args.laya_dtype if args.model_kind == "laya" else None,
+        "head_max_len": agent.cfg["head_max_len"] if args.model_kind == "laya" else None,
         "repeats": args.repeats, "baseline_responses": baseline, "runs": [],
     }
     for trial in range(args.repeats):

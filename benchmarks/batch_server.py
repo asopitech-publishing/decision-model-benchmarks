@@ -33,7 +33,7 @@ class BatchServer(ThreadingHTTPServer):
 
     def __init__(self, address, *, agent, predictor, rows_per_request: int,
                  batch_requests: int, batch_wait_ms: float, max_pending: int = 128,
-                 max_questions_per_request: int = 3):
+                 max_questions_per_request: int = 3, runtime_config: dict | None = None):
         if (batch_requests < 1 or batch_wait_ms < 0 or max_pending < batch_requests
                 or max_questions_per_request < 1):
             raise ValueError("invalid batch or queue settings")
@@ -41,6 +41,7 @@ class BatchServer(ThreadingHTTPServer):
         self.predictor = predictor
         self.rows_per_request = rows_per_request
         self.max_questions_per_request = max_questions_per_request
+        self.runtime_config = runtime_config or {}
         self.batch_requests = batch_requests
         self.batch_wait_s = batch_wait_ms / 1000
         self.pending: queue.Queue[Pending] = queue.Queue(maxsize=max_pending)
@@ -110,7 +111,8 @@ def _handler():
             self._send(200, {"status": "ok", "model_loaded": True,
                              "model_instances": 1,
                              "max_batch_requests": self.server.batch_requests,
-                             "pending": self.server.pending.qsize()})
+                             "pending": self.server.pending.qsize(),
+                             **self.server.runtime_config})
 
         def do_POST(self):
             if self.path not in {"/v1/systemone", "/v1/decision"}:
@@ -164,15 +166,20 @@ def main():
     parser.add_argument("--batch-wait-ms", type=float, default=2)
     parser.add_argument("--max-pending", type=int, default=128)
     parser.add_argument("--max-questions-per-request", type=int, default=3)
+    parser.add_argument("--laya-dtype", choices=["float16", "int8_mixed"], default="int8_mixed")
+    parser.add_argument("--laya-head-max-len", type=int)
     args = parser.parse_args()
     agent, _, predictor, rows_per_request = load_backend(
-        args.model_kind, args.model, args.batch_requests, args.max_questions_per_request
+        args.model_kind, args.model, args.batch_requests, args.max_questions_per_request,
+        laya_dtype=args.laya_dtype, laya_head_max_len=args.laya_head_max_len,
     )
     server = BatchServer(
         ("127.0.0.1", args.port), agent=agent, predictor=predictor,
         rows_per_request=rows_per_request, batch_requests=args.batch_requests,
         batch_wait_ms=args.batch_wait_ms, max_pending=args.max_pending,
         max_questions_per_request=args.max_questions_per_request,
+        runtime_config={"laya_dtype": args.laya_dtype, "head_max_len": agent.cfg["head_max_len"]}
+        if args.model_kind == "laya" else {},
     )
     print(json.dumps({"port": args.port, "model": args.model_kind,
                       "model_instances": 1, "max_batch_requests": args.batch_requests}), flush=True)

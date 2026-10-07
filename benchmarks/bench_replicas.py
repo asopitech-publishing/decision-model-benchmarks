@@ -30,7 +30,8 @@ def _free_port(port: int) -> bool:
         return probe.connect_ex(("127.0.0.1", port)) != 0
 
 
-def _wait_healthy(process: subprocess.Popen, port: int, timeout_s: float) -> None:
+def _wait_healthy(process: subprocess.Popen, port: int, timeout_s: float,
+                  expected_laya_dtype=None, expected_head_max_len=None) -> None:
     url = f"http://127.0.0.1:{port}/healthz"
     deadline = time.monotonic() + timeout_s
     while time.monotonic() < deadline:
@@ -39,9 +40,12 @@ def _wait_healthy(process: subprocess.Popen, port: int, timeout_s: float) -> Non
         try:
             with urllib.request.urlopen(url, timeout=1) as response:
                 data = json.load(response)
-            if data["model_instances"] == 1 and data["max_batch_requests"] == 1:
+            if (data["model_instances"] == 1 and data["max_batch_requests"] == 1
+                    and (expected_laya_dtype is None or data.get("laya_dtype") == expected_laya_dtype)
+                    and (expected_head_max_len is None
+                         or data.get("head_max_len") == expected_head_max_len)):
                 return
-            raise RuntimeError("replica does not have one model and batch size one")
+            raise RuntimeError("replica model, precision, head budget, or batch size mismatch")
         except (urllib.error.URLError, TimeoutError, OSError):
             time.sleep(0.25)
     raise TimeoutError(f"replica on port {port} did not become healthy")
@@ -79,7 +83,11 @@ def main() -> None:
     parser.add_argument("--repeats", type=int, default=3)
     parser.add_argument("--port-base", type=int, default=8120)
     parser.add_argument("--startup-timeout", type=float, default=180)
+    parser.add_argument("--laya-dtype", choices=["float16", "int8_mixed"], default="int8_mixed")
+    parser.add_argument("--laya-head-max-len", type=int)
     args = parser.parse_args()
+    if args.model_kind != "laya" and (args.laya_dtype != "int8_mixed" or args.laya_head_max_len is not None):
+        parser.error("Laya precision and head budget apply only to --model-kind laya")
     model_id = None
     if args.model_kind == "strands":
         model_id = args.model.rstrip("/").split("/")[-1]
@@ -111,6 +119,8 @@ def main() -> None:
         "routing": "client round robin across loopback-only independent processes",
         "server_batch_requests": 1,
         "cache_prompts": False,
+        "laya_dtype": args.laya_dtype if args.model_kind == "laya" else None,
+        "head_max_len": args.laya_head_max_len if args.model_kind == "laya" else None,
         "warmup_policy": "one untimed local request per replica",
         "groups": [],
     }
@@ -139,9 +149,17 @@ def main() -> None:
                     command = [python, server_file, "--model-kind", args.model_kind,
                                "--model", args.model, "--port", str(port),
                                "--batch-requests", "1", "--batch-wait-ms", "0"]
+                    if args.model_kind == "laya":
+                        command += ["--laya-dtype", args.laya_dtype]
+                        if args.laya_head_max_len is not None:
+                            command += ["--laya-head-max-len", str(args.laya_head_max_len)]
                     process = subprocess.Popen(command, env=env, stdout=log, stderr=subprocess.STDOUT)
                     processes.append(process)
-                    _wait_healthy(process, port, args.startup_timeout)
+                    _wait_healthy(
+                        process, port, args.startup_timeout,
+                        expected_laya_dtype=args.laya_dtype if args.model_kind == "laya" else None,
+                        expected_head_max_len=args.laya_head_max_len if args.model_kind == "laya" else None,
+                    )
                     print(f"{args.model_kind}: replica {len(processes)}/{count} ready", flush=True)
                 urls = [f"http://127.0.0.1:{port}{ROUTES[args.model_kind]}" for port in ports]
                 warmups = []

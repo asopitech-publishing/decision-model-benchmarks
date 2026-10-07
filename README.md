@@ -11,15 +11,16 @@ Strands Decider 2B、Clef-flash、laya、Jevを同じ設問形式で比較する
 - [`RESULTS.md`](RESULTS.md) — 2026年10月6日の品質・並列性能の集計と評価上の注意点。
 - [`BATCH_RESULTS.md`](BATCH_RESULTS.md) — 10月7日に各ローカルモデルを1インスタンスで動かしたバッチ推論・HTTP同時要求の測定。
 - [`REPLICA_RESULTS.md`](REPLICA_RESULTS.md) — 同じMacで各モデルを1・2・4プロセス常駐させたときのHTTP応答時間。
-- [`PRECISION_RESULTS.md`](PRECISION_RESULTS.md) — 元のlaya multilingual FP16と、そのq8変換版を同一条件で比較。Kiro20問・サポート72判定の生結果も収録。
+- [`PRECISION_RESULTS.md`](PRECISION_RESULTS.md) — 元のlaya multilingual FP16とq8を、品質・モデル内バッチ・HTTP実バッチ・1/2/4インスタンスで同条件比較。
 - [`results/2026-10-06/`](results/2026-10-06/) — 同日の公開用生結果12ファイル。HTTP応答本文、usage、各リクエストの計測値を収録。
-- [`results/2026-10-07/`](results/2026-10-07/) — バッチ推論・複数インスタンス・FP16/q8精度比較の公開用生結果13ファイル。
+- [`results/2026-10-07/`](results/2026-10-07/) — バッチ推論・複数インスタンス・FP16/q8比較の公開用生結果19ファイル。
 - `benchmarks/export_public_results.py` — 元の測定結果から公開用ファイルを作り、応答本文のハッシュと機密情報を検査。
 - `benchmarks/bench_model_batch.py`、`benchmarks/*_batch.py` — 独立した要求を、各モデル1インスタンスで実際に1回の推論へまとめる測定。
 - `benchmarks/batch_server.py` — 受付キューと2 msの待機窓を持つ、1モデル・1推論ワーカーのHTTPサーバー。`X-Inference-Batch-Size`で実バッチサイズを返します。
 - `benchmarks/export_batch_results.py` — 10月7日の6ファイルを公開用に検査・出力。
 - `benchmarks/audit_strands_versions.py` — 保存済みのStrands v19/v21応答について、版・要求ハッシュ・応答ハッシュ・判定を再検証。
 - `benchmarks/compare_laya_precisions.py`、`benchmarks/audit_laya_precisions.py` — FP16/q8を`head_max_len=512`で直接測定し、全文入力・重みの識別・生応答・採点を監査。
+- `benchmarks/export_laya_performance.py` — 両精度のバッチ・複数インスタンス・HTTP実バッチ計6ファイルを、モデル識別・判定・全応答ハッシュ・機密情報まで監査して公開用に変換。
 - `benchmarks/bench_replicas.py`、`benchmarks/export_replica_results.py` — ローカルモデルを別プロセスで1・2・4個動かし、応答時間を測定・公開用に監査。
 
 ## 準備
@@ -68,6 +69,35 @@ python benchmarks/audit_strands_versions.py
 ```
 
 `--model`を`clef`、`laya`、`jev`に変えると同じ設問を送れます。Strandsの既定はv21で、v19を使うときはクライアントの`--strands-version v19`とサーバーのモデル指定を揃えます。既存結果へ並列測定を追記する際も版の一致を確認します。MPSを測る場合はStrandsサーバーを`--device mps`で起動し、別の結果ファイルを指定します。測定前のローカルモデル用ウォームアップを省く場合は`--no-warmup`を付けます。
+
+## laya FP16・q8を同じ条件で比較する
+
+両精度とも`--laya-head-max-len 512`を指定します。モデルディレクトリの設定ファイルは変更しません。以下はFP16の例です。q8ではモデルのディレクトリをq8版に替え、`float16`を`int8_mixed`、`fp16`を`q8`に替えます。両精度のKiro・サポート品質は`compare_laya_precisions.py`で測ります。
+
+```bash
+PYTHONPATH="benchmarks:path/to/laya-mlx" python benchmarks/bench_model_batch.py \
+  --model-kind laya --model path/to/laya-multilingual \
+  --laya-dtype float16 --laya-head-max-len 512 \
+  --fixture benchmarks/clef_vs_laya_cases.json --out results/laya-fp16-batch.json
+
+python benchmarks/bench_replicas.py --model-kind laya \
+  --python path/to/laya-env/bin/python --source path/to/laya-mlx \
+  --model path/to/laya-multilingual --laya-dtype float16 --laya-head-max-len 512 \
+  --fixture benchmarks/clef_vs_laya_cases.json \
+  --out results/laya-fp16-replicas.json --port-base 8150
+
+# 別ターミナルで起動したFP16のバッチサーバーに送る
+PYTHONPATH="benchmarks:path/to/laya-mlx" python benchmarks/batch_server.py \
+  --model-kind laya --model path/to/laya-multilingual \
+  --laya-dtype float16 --laya-head-max-len 512 \
+  --port 8014 --batch-requests 8 --batch-wait-ms 2
+
+python benchmarks/compare_four.py --model laya --laya-precision fp16 \
+  --expect-laya-head-max-len 512 --fixture benchmarks/clef_vs_laya_cases.json \
+  --out results/laya-fp16-http-batch.json --parallel 2 4 8
+```
+
+`compare_four.py`は送信前にサーバーのdtype・`head_max_len`・モデル常駐数を照合します。生結果を公開用に変換した6ファイルは[`PRECISION_RESULTS.md`](PRECISION_RESULTS.md)から辿れます。
 
 ## 複数インスタンスでの応答時間を測る
 
@@ -123,6 +153,8 @@ python benchmarks/compare_four.py --model laya \
 
 サーバーはループバックのみに公開し、既定では1要求当たり最大3問を受け付けます。設問数が違う場合は`--max-questions-per-request`を指定してください。各HTTP応答の`inference_batch_size`を確認すれば、同時要求が実際に何件の推論バッチになったか分かります。
 
-通常の測定出力にはHTTPの生レスポンスが含まれ、モード600で保存されます。`results/`は原則Git管理対象外です。2026年10月6日の公開用に監査した12ファイルのみ、例外として収録しました。元の測定データに含まれていたPCの絶対パスを相対パスに置き換え、応答ヘッダーを除いています。HTTP応答本文はBase64で全件保持し、SHA-256で照合しています。記事の集計と照合するときは、同一の設問、モデル版、実行環境、サーバー設定を記録してください。
+通常の測定出力にはHTTPの生レスポンスが含まれ、モード600で保存されます。`results/`は原則Git管理対象外で、監査済みの公開用ファイルだけを例外として収録します。元の測定データに含まれていたPCの絶対パスを相対パスに置き換え、応答ヘッダーを除いています。HTTP応答本文はBase64で全件保持し、SHA-256で照合しています。記事の集計と照合するときは、同一の設問、モデル版、実行環境、サーバー設定を記録してください。
 
 10月7日のバッチ用6ファイルと複数インスタンス用3ファイルも同じ方針で監査して収録しました。バッチ用は`python benchmarks/export_batch_results.py results results/2026-10-07`で再生成できます。公開用エクスポートでは保存済みの確率から最終判定を再集計します。公開前に認証情報とPC固有のパスを確認してください。
+
+FP16/q8の追加性能測定6ファイルは`python benchmarks/export_laya_performance.py results results/2026-10-07`で監査しました。既存の公開ファイルは上書きしません。

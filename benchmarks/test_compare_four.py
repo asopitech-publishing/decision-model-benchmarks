@@ -46,6 +46,15 @@ class RawCaptureTests(unittest.TestCase):
         self.assertEqual(result["inference_batch_size"], 2)
         self.assertNotIn("secret-test-key", json.dumps(result))
 
+    def test_laya_health_checks_precision_and_head_budget(self) -> None:
+        health = {"laya_dtype": "float16", "head_max_len": 512,
+                  "model_instances": 1, "max_batch_requests": 8}
+        with patch.object(compare_four.urllib.request, "urlopen",
+                          side_effect=lambda *_args, **_kwargs: FakeResponse(json.dumps(health).encode())):
+            self.assertEqual(compare_four._check_laya_health("fp16", 512), health)
+            with self.assertRaises(RuntimeError):
+                compare_four._check_laya_health("q8", 512)
+
     def test_http_error_preserves_body(self) -> None:
         raw = b'{"detail":"rate limited"}'
         error = urllib.error.HTTPError("https://api.typesafe.ai/v1/systemone", 429,
