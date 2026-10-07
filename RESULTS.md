@@ -17,8 +17,12 @@ Kiro Crew型の20問は、先行記事の許容ラベルに入った件数と第
 | Strands Decider 2B v21、MLX | 19/20 | 14/20 | 63/72 | 71 ms |
 | Strands Decider 2B v21、MPS | 19/20 | 14/20 | — | — |
 | Clef-flash 4bit、MLX | 16/20 | 14/20 | 66/72 | 276 ms |
-| laya multilingual q8、MLX | 9/20 | 6/20 | 58/72 | 10 ms |
+| laya multilingual q8、MLX・HTTP・head 256 | 9/20 | 6/20 | 58/72 | 10 ms |
+| laya multilingual FP16、MLX・直接呼び出し・head 512 | 9/20 | 6/20 | 56/72 | — |
+| laya multilingual q8、MLX・直接呼び出し・head 512 | 9/20 | 6/20 | 58/72 | — |
 | Jev 1.13.0、API | 18/20 | 14/20 | 67/72 | 213 ms |
+
+FP16とq8を同じ`head_max_len=512`で再測定した結果は、[精度別比較](PRECISION_RESULTS.md)に生結果とともに掲載しています。Kiroでは両者とも20問すべて`simple`で、量子化による判定差はありません。サポートでは72判定中3件が変わり、q8が正解数で2件上回りました。直接呼び出しの時間は上表のHTTP p50と比較していません。
 
 同じMac・設問でStrands v19はKiro 20/20、サポート66/72でした。v19とv21の生結果をリクエストハッシュ・返却モデルID・応答本文で照合すると、KiroではP11が`medium→simple`、P19が`complex→medium`、サポートではa04・s01・s03の緊急度が`0→1`に変わっています。Kiroは両版とも第一候補一致14/20で、P19は両版とも許容範囲内です。MPSでもKiroの2件の変化を確認しました。サポートのMPS試験は実施していません。[版別監査コード](benchmarks/audit_strands_versions.py)でこれらをオフライン再検証できます。版ごとの実行日とウォームアップ条件が異なるため、応答速度の差を版差として評価しません。
 

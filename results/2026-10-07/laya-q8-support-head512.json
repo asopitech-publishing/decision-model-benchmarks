@@ -1,0 +1,1961 @@
+{
+  "precision": "q8",
+  "checkpoint": "convaiinnovations/laya-multilingual (local q8 conversion)",
+  "checkpoint_weights_sha256": "4efc8723f42950d07fd79d32d032e5ef06bd3e4b3a7fbcc58c4b5a125ed85b86",
+  "checkpoint_config_head_max_len": 256,
+  "quantization": {
+    "bits": 8,
+    "group_size": 64,
+    "mode": "affine",
+    "scope": "encoder_linear",
+    "non_quantized": [
+      "embeddings",
+      "norms",
+      "decision_head",
+      "scorer",
+      "action_head"
+    ]
+  },
+  "runtime": "laya-mlx in-process MLX GPU",
+  "max_len": 1024,
+  "head_max_len": 512,
+  "fixture": "benchmarks/clef_vs_laya_cases.json",
+  "fixture_sha256": "835163fd0dfc9fba9568991f9715e1ea8a3c77003c8327d66c639d6defc050db",
+  "timestamp_utc": "2026-10-07T11:31:54.004889+00:00",
+  "warmup_policy": "one local unscored inference",
+  "warmup_response": {
+    "model": "laya-rl-agent",
+    "answers": {
+      "department": {
+        "type": "choice",
+        "confidence": 0.8706,
+        "action": {
+          "act_probability": 1.0
+        },
+        "choice": "billing",
+        "probabilities": {
+          "billing": 0.9647,
+          "technical": 0.0262,
+          "account": 0.0042,
+          "sales": 0.005
+        }
+      },
+      "urgency": {
+        "type": "score",
+        "confidence": 0.2555,
+        "action": {
+          "act_probability": 1.0
+        },
+        "score": 1.3529,
+        "legend": {
+          "0": "低い：急ぎではなく、数日待てる",
+          "1": "通常：数日以内の対応が望ましい",
+          "2": "高い：業務停止、重大なアクセス障害、または当日対応が必要"
+        },
+        "probabilities": {
+          "0": 0.0401,
+          "1": 0.5668,
+          "2": 0.393
+        }
+      },
+      "refund_request": {
+        "type": "noul",
+        "confidence": 0.9042,
+        "action": {
+          "act_probability": 1.0
+        },
+        "noul": 0.9042
+      }
+    },
+    "usage": {
+      "input_tokens": 247,
+      "output_tokens": 0
+    }
+  },
+  "load_s": 0.28,
+  "latency_p50_ms": 8.514,
+  "quality": {
+    "by_kind": {
+      "choice": {
+        "correct": 21,
+        "total": 24
+      },
+      "score": {
+        "correct": 13,
+        "total": 24
+      },
+      "noul": {
+        "correct": 24,
+        "total": 24
+      }
+    },
+    "correct": 58,
+    "accepted_correct": 58,
+    "total": 72,
+    "request_failures": [],
+    "mismatches": [
+      {
+        "id": "b02",
+        "question": "urgency",
+        "expected": 0,
+        "predicted": 1
+      },
+      {
+        "id": "b06",
+        "question": "urgency",
+        "expected": 0,
+        "predicted": 1
+      },
+      {
+        "id": "t02",
+        "question": "department",
+        "expected": "technical",
+        "predicted": "account"
+      },
+      {
+        "id": "t04",
+        "question": "urgency",
+        "expected": 2,
+        "predicted": 1
+      },
+      {
+        "id": "t05",
+        "question": "urgency",
+        "expected": 0,
+        "predicted": 1
+      },
+      {
+        "id": "a01",
+        "question": "urgency",
+        "expected": 0,
+        "predicted": 1
+      },
+      {
+        "id": "a02",
+        "question": "urgency",
+        "expected": 2,
+        "predicted": 1
+      },
+      {
+        "id": "a04",
+        "question": "urgency",
+        "expected": 0,
+        "predicted": 2
+      },
+      {
+        "id": "a06",
+        "question": "urgency",
+        "expected": 0,
+        "predicted": 1
+      },
+      {
+        "id": "s01",
+        "question": "department",
+        "expected": "sales",
+        "predicted": "billing"
+      },
+      {
+        "id": "s01",
+        "question": "urgency",
+        "expected": 0,
+        "predicted": 1
+      },
+      {
+        "id": "s03",
+        "question": "department",
+        "expected": "sales",
+        "predicted": "billing"
+      },
+      {
+        "id": "s03",
+        "question": "urgency",
+        "expected": 0,
+        "predicted": 2
+      },
+      {
+        "id": "s05",
+        "question": "urgency",
+        "expected": 0,
+        "predicted": 1
+      }
+    ]
+  },
+  "records": [
+    {
+      "id": "b01",
+      "status": 200,
+      "latency_ms": 8.89,
+      "input_audit": {
+        "department": {
+          "instruction_tokens": 11,
+          "option_tokens_with_markers": 69,
+          "state_tokens": 20,
+          "input_tokens": 104
+        },
+        "urgency": {
+          "instruction_tokens": 12,
+          "option_tokens_with_markers": 51,
+          "state_tokens": 20,
+          "input_tokens": 87
+        },
+        "refund_request": {
+          "instruction_tokens": 14,
+          "option_tokens_with_markers": 18,
+          "state_tokens": 20,
+          "input_tokens": 56
+        }
+      },
+      "answers": {
+        "department": {
+          "type": "choice",
+          "confidence": 0.8706,
+          "action": {
+            "act_probability": 1.0
+          },
+          "choice": "billing",
+          "probabilities": {
+            "billing": 0.9647,
+            "technical": 0.0262,
+            "account": 0.0042,
+            "sales": 0.005
+          }
+        },
+        "urgency": {
+          "type": "score",
+          "confidence": 0.2555,
+          "action": {
+            "act_probability": 1.0
+          },
+          "score": 1.3529,
+          "legend": {
+            "0": "低い：急ぎではなく、数日待てる",
+            "1": "通常：数日以内の対応が望ましい",
+            "2": "高い：業務停止、重大なアクセス障害、または当日対応が必要"
+          },
+          "probabilities": {
+            "0": 0.0401,
+            "1": 0.5668,
+            "2": 0.393
+          }
+        },
+        "refund_request": {
+          "type": "noul",
+          "confidence": 0.9042,
+          "action": {
+            "act_probability": 1.0
+          },
+          "noul": 0.9042
+        }
+      },
+      "usage": {
+        "input_tokens": 247,
+        "output_tokens": 0
+      },
+      "raw_response_text": "{\"model\":\"laya-rl-agent\",\"answers\":{\"department\":{\"type\":\"choice\",\"confidence\":0.8706,\"action\":{\"act_probability\":1.0},\"choice\":\"billing\",\"probabilities\":{\"billing\":0.9647,\"technical\":0.0262,\"account\":0.0042,\"sales\":0.005}},\"urgency\":{\"type\":\"score\",\"confidence\":0.2555,\"action\":{\"act_probability\":1.0},\"score\":1.3529,\"legend\":{\"0\":\"低い：急ぎではなく、数日待てる\",\"1\":\"通常：数日以内の対応が望ましい\",\"2\":\"高い：業務停止、重大なアクセス障害、または当日対応が必要\"},\"probabilities\":{\"0\":0.0401,\"1\":0.5668,\"2\":0.393}},\"refund_request\":{\"type\":\"noul\",\"confidence\":0.9042,\"action\":{\"act_probability\":1.0},\"noul\":0.9042}},\"usage\":{\"input_tokens\":247,\"output_tokens\":0}}",
+      "raw_response_base64": "eyJtb2RlbCI6ImxheWEtcmwtYWdlbnQiLCJhbnN3ZXJzIjp7ImRlcGFydG1lbnQiOnsidHlwZSI6ImNob2ljZSIsImNvbmZpZGVuY2UiOjAuODcwNiwiYWN0aW9uIjp7ImFjdF9wcm9iYWJpbGl0eSI6MS4wfSwiY2hvaWNlIjoiYmlsbGluZyIsInByb2JhYmlsaXRpZXMiOnsiYmlsbGluZyI6MC45NjQ3LCJ0ZWNobmljYWwiOjAuMDI2MiwiYWNjb3VudCI6MC4wMDQyLCJzYWxlcyI6MC4wMDV9fSwidXJnZW5jeSI6eyJ0eXBlIjoic2NvcmUiLCJjb25maWRlbmNlIjowLjI1NTUsImFjdGlvbiI6eyJhY3RfcHJvYmFiaWxpdHkiOjEuMH0sInNjb3JlIjoxLjM1MjksImxlZ2VuZCI6eyIwIjoi5L2O44GE77ya5oCl44GO44Gn44Gv44Gq44GP44CB5pWw5pel5b6F44Gm44KLIiwiMSI6IumAmuW4uO+8muaVsOaXpeS7peWGheOBruWvvuW/nOOBjOacm+OBvuOBl+OBhCIsIjIiOiLpq5jjgYTvvJrmpa3li5nlgZzmraLjgIHph43lpKfjgarjgqLjgq/jgrvjgrnpmpzlrrPjgIHjgb7jgZ/jga/lvZPml6Xlr77lv5zjgYzlv4XopoEifSwicHJvYmFiaWxpdGllcyI6eyIwIjowLjA0MDEsIjEiOjAuNTY2OCwiMiI6MC4zOTN9fSwicmVmdW5kX3JlcXVlc3QiOnsidHlwZSI6Im5vdWwiLCJjb25maWRlbmNlIjowLjkwNDIsImFjdGlvbiI6eyJhY3RfcHJvYmFiaWxpdHkiOjEuMH0sIm5vdWwiOjAuOTA0Mn19LCJ1c2FnZSI6eyJpbnB1dF90b2tlbnMiOjI0Nywib3V0cHV0X3Rva2VucyI6MH19",
+      "raw_response_sha256": "0fd859adb93dbebcebdc1a1b64ccc446551e8385b118aa0aac245abc5f551465"
+    },
+    {
+      "id": "b02",
+      "status": 200,
+      "latency_ms": 8.948,
+      "input_audit": {
+        "department": {
+          "instruction_tokens": 11,
+          "option_tokens_with_markers": 69,
+          "state_tokens": 17,
+          "input_tokens": 101
+        },
+        "urgency": {
+          "instruction_tokens": 12,
+          "option_tokens_with_markers": 51,
+          "state_tokens": 17,
+          "input_tokens": 84
+        },
+        "refund_request": {
+          "instruction_tokens": 14,
+          "option_tokens_with_markers": 18,
+          "state_tokens": 17,
+          "input_tokens": 53
+        }
+      },
+      "answers": {
+        "department": {
+          "type": "choice",
+          "confidence": 1.0,
+          "action": {
+            "act_probability": 1.0
+          },
+          "choice": "billing",
+          "probabilities": {
+            "billing": 1.0,
+            "technical": 0.0,
+            "account": 0.0,
+            "sales": 0.0
+          }
+        },
+        "urgency": {
+          "type": "score",
+          "confidence": 0.2661,
+          "action": {
+            "act_probability": 1.0
+          },
+          "score": 1.1529,
+          "legend": {
+            "0": "低い：急ぎではなく、数日待てる",
+            "1": "通常：数日以内の対応が望ましい",
+            "2": "高い：業務停止、重大なアクセス障害、または当日対応が必要"
+          },
+          "probabilities": {
+            "0": 0.0822,
+            "1": 0.6827,
+            "2": 0.2351
+          }
+        },
+        "refund_request": {
+          "type": "noul",
+          "confidence": 0.9723,
+          "action": {
+            "act_probability": 1.0
+          },
+          "noul": 0.0277
+        }
+      },
+      "usage": {
+        "input_tokens": 238,
+        "output_tokens": 0
+      },
+      "raw_response_text": "{\"model\":\"laya-rl-agent\",\"answers\":{\"department\":{\"type\":\"choice\",\"confidence\":1.0,\"action\":{\"act_probability\":1.0},\"choice\":\"billing\",\"probabilities\":{\"billing\":1.0,\"technical\":0.0,\"account\":0.0,\"sales\":0.0}},\"urgency\":{\"type\":\"score\",\"confidence\":0.2661,\"action\":{\"act_probability\":1.0},\"score\":1.1529,\"legend\":{\"0\":\"低い：急ぎではなく、数日待てる\",\"1\":\"通常：数日以内の対応が望ましい\",\"2\":\"高い：業務停止、重大なアクセス障害、または当日対応が必要\"},\"probabilities\":{\"0\":0.0822,\"1\":0.6827,\"2\":0.2351}},\"refund_request\":{\"type\":\"noul\",\"confidence\":0.9723,\"action\":{\"act_probability\":1.0},\"noul\":0.0277}},\"usage\":{\"input_tokens\":238,\"output_tokens\":0}}",
+      "raw_response_base64": "eyJtb2RlbCI6ImxheWEtcmwtYWdlbnQiLCJhbnN3ZXJzIjp7ImRlcGFydG1lbnQiOnsidHlwZSI6ImNob2ljZSIsImNvbmZpZGVuY2UiOjEuMCwiYWN0aW9uIjp7ImFjdF9wcm9iYWJpbGl0eSI6MS4wfSwiY2hvaWNlIjoiYmlsbGluZyIsInByb2JhYmlsaXRpZXMiOnsiYmlsbGluZyI6MS4wLCJ0ZWNobmljYWwiOjAuMCwiYWNjb3VudCI6MC4wLCJzYWxlcyI6MC4wfX0sInVyZ2VuY3kiOnsidHlwZSI6InNjb3JlIiwiY29uZmlkZW5jZSI6MC4yNjYxLCJhY3Rpb24iOnsiYWN0X3Byb2JhYmlsaXR5IjoxLjB9LCJzY29yZSI6MS4xNTI5LCJsZWdlbmQiOnsiMCI6IuS9juOBhO+8muaApeOBjuOBp+OBr+OBquOBj+OAgeaVsOaXpeW+heOBpuOCiyIsIjEiOiLpgJrluLjvvJrmlbDml6Xku6XlhoXjga7lr77lv5zjgYzmnJvjgb7jgZfjgYQiLCIyIjoi6auY44GE77ya5qWt5YuZ5YGc5q2i44CB6YeN5aSn44Gq44Ki44Kv44K744K56Zqc5a6z44CB44G+44Gf44Gv5b2T5pel5a++5b+c44GM5b+F6KaBIn0sInByb2JhYmlsaXRpZXMiOnsiMCI6MC4wODIyLCIxIjowLjY4MjcsIjIiOjAuMjM1MX19LCJyZWZ1bmRfcmVxdWVzdCI6eyJ0eXBlIjoibm91bCIsImNvbmZpZGVuY2UiOjAuOTcyMywiYWN0aW9uIjp7ImFjdF9wcm9iYWJpbGl0eSI6MS4wfSwibm91bCI6MC4wMjc3fX0sInVzYWdlIjp7ImlucHV0X3Rva2VucyI6MjM4LCJvdXRwdXRfdG9rZW5zIjowfX0=",
+      "raw_response_sha256": "b1548ef680a9c4184dc3f5d3f930dff6fa35ffe348f41c2a07d289cb3302dc91"
+    },
+    {
+      "id": "b03",
+      "status": 200,
+      "latency_ms": 8.698,
+      "input_audit": {
+        "department": {
+          "instruction_tokens": 11,
+          "option_tokens_with_markers": 69,
+          "state_tokens": 14,
+          "input_tokens": 98
+        },
+        "urgency": {
+          "instruction_tokens": 12,
+          "option_tokens_with_markers": 51,
+          "state_tokens": 14,
+          "input_tokens": 81
+        },
+        "refund_request": {
+          "instruction_tokens": 14,
+          "option_tokens_with_markers": 18,
+          "state_tokens": 14,
+          "input_tokens": 50
+        }
+      },
+      "answers": {
+        "department": {
+          "type": "choice",
+          "confidence": 1.0,
+          "action": {
+            "act_probability": 1.0
+          },
+          "choice": "billing",
+          "probabilities": {
+            "billing": 1.0,
+            "technical": 0.0,
+            "account": 0.0,
+            "sales": 0.0
+          }
+        },
+        "urgency": {
+          "type": "score",
+          "confidence": 0.3377,
+          "action": {
+            "act_probability": 1.0
+          },
+          "score": 1.3201,
+          "legend": {
+            "0": "低い：急ぎではなく、数日待てる",
+            "1": "通常：数日以内の対応が望ましい",
+            "2": "高い：業務停止、重大なアクセス障害、または当日対応が必要"
+          },
+          "probabilities": {
+            "0": 0.0193,
+            "1": 0.6414,
+            "2": 0.3393
+          }
+        },
+        "refund_request": {
+          "type": "noul",
+          "confidence": 0.9987,
+          "action": {
+            "act_probability": 1.0
+          },
+          "noul": 0.0013
+        }
+      },
+      "usage": {
+        "input_tokens": 229,
+        "output_tokens": 0
+      },
+      "raw_response_text": "{\"model\":\"laya-rl-agent\",\"answers\":{\"department\":{\"type\":\"choice\",\"confidence\":1.0,\"action\":{\"act_probability\":1.0},\"choice\":\"billing\",\"probabilities\":{\"billing\":1.0,\"technical\":0.0,\"account\":0.0,\"sales\":0.0}},\"urgency\":{\"type\":\"score\",\"confidence\":0.3377,\"action\":{\"act_probability\":1.0},\"score\":1.3201,\"legend\":{\"0\":\"低い：急ぎではなく、数日待てる\",\"1\":\"通常：数日以内の対応が望ましい\",\"2\":\"高い：業務停止、重大なアクセス障害、または当日対応が必要\"},\"probabilities\":{\"0\":0.0193,\"1\":0.6414,\"2\":0.3393}},\"refund_request\":{\"type\":\"noul\",\"confidence\":0.9987,\"action\":{\"act_probability\":1.0},\"noul\":0.0013}},\"usage\":{\"input_tokens\":229,\"output_tokens\":0}}",
+      "raw_response_base64": "eyJtb2RlbCI6ImxheWEtcmwtYWdlbnQiLCJhbnN3ZXJzIjp7ImRlcGFydG1lbnQiOnsidHlwZSI6ImNob2ljZSIsImNvbmZpZGVuY2UiOjEuMCwiYWN0aW9uIjp7ImFjdF9wcm9iYWJpbGl0eSI6MS4wfSwiY2hvaWNlIjoiYmlsbGluZyIsInByb2JhYmlsaXRpZXMiOnsiYmlsbGluZyI6MS4wLCJ0ZWNobmljYWwiOjAuMCwiYWNjb3VudCI6MC4wLCJzYWxlcyI6MC4wfX0sInVyZ2VuY3kiOnsidHlwZSI6InNjb3JlIiwiY29uZmlkZW5jZSI6MC4zMzc3LCJhY3Rpb24iOnsiYWN0X3Byb2JhYmlsaXR5IjoxLjB9LCJzY29yZSI6MS4zMjAxLCJsZWdlbmQiOnsiMCI6IuS9juOBhO+8muaApeOBjuOBp+OBr+OBquOBj+OAgeaVsOaXpeW+heOBpuOCiyIsIjEiOiLpgJrluLjvvJrmlbDml6Xku6XlhoXjga7lr77lv5zjgYzmnJvjgb7jgZfjgYQiLCIyIjoi6auY44GE77ya5qWt5YuZ5YGc5q2i44CB6YeN5aSn44Gq44Ki44Kv44K744K56Zqc5a6z44CB44G+44Gf44Gv5b2T5pel5a++5b+c44GM5b+F6KaBIn0sInByb2JhYmlsaXRpZXMiOnsiMCI6MC4wMTkzLCIxIjowLjY0MTQsIjIiOjAuMzM5M319LCJyZWZ1bmRfcmVxdWVzdCI6eyJ0eXBlIjoibm91bCIsImNvbmZpZGVuY2UiOjAuOTk4NywiYWN0aW9uIjp7ImFjdF9wcm9iYWJpbGl0eSI6MS4wfSwibm91bCI6MC4wMDEzfX0sInVzYWdlIjp7ImlucHV0X3Rva2VucyI6MjI5LCJvdXRwdXRfdG9rZW5zIjowfX0=",
+      "raw_response_sha256": "d8a182d86cbab689dcb5e74750153670717aaa99ee69dbbaf45e3bc4b1099220"
+    },
+    {
+      "id": "b04",
+      "status": 200,
+      "latency_ms": 8.52,
+      "input_audit": {
+        "department": {
+          "instruction_tokens": 11,
+          "option_tokens_with_markers": 69,
+          "state_tokens": 20,
+          "input_tokens": 104
+        },
+        "urgency": {
+          "instruction_tokens": 12,
+          "option_tokens_with_markers": 51,
+          "state_tokens": 20,
+          "input_tokens": 87
+        },
+        "refund_request": {
+          "instruction_tokens": 14,
+          "option_tokens_with_markers": 18,
+          "state_tokens": 20,
+          "input_tokens": 56
+        }
+      },
+      "answers": {
+        "department": {
+          "type": "choice",
+          "confidence": 1.0,
+          "action": {
+            "act_probability": 1.0
+          },
+          "choice": "billing",
+          "probabilities": {
+            "billing": 1.0,
+            "technical": 0.0,
+            "account": 0.0,
+            "sales": 0.0
+          }
+        },
+        "urgency": {
+          "type": "score",
+          "confidence": 0.2758,
+          "action": {
+            "act_probability": 1.0
+          },
+          "score": 1.562,
+          "legend": {
+            "0": "低い：急ぎではなく、数日待てる",
+            "1": "通常：数日以内の対応が望ましい",
+            "2": "高い：業務停止、重大なアクセス障害、または当日対応が必要"
+          },
+          "probabilities": {
+            "0": 0.0363,
+            "1": 0.3654,
+            "2": 0.5983
+          }
+        },
+        "refund_request": {
+          "type": "noul",
+          "confidence": 0.9971,
+          "action": {
+            "act_probability": 1.0
+          },
+          "noul": 0.9971
+        }
+      },
+      "usage": {
+        "input_tokens": 247,
+        "output_tokens": 0
+      },
+      "raw_response_text": "{\"model\":\"laya-rl-agent\",\"answers\":{\"department\":{\"type\":\"choice\",\"confidence\":1.0,\"action\":{\"act_probability\":1.0},\"choice\":\"billing\",\"probabilities\":{\"billing\":1.0,\"technical\":0.0,\"account\":0.0,\"sales\":0.0}},\"urgency\":{\"type\":\"score\",\"confidence\":0.2758,\"action\":{\"act_probability\":1.0},\"score\":1.562,\"legend\":{\"0\":\"低い：急ぎではなく、数日待てる\",\"1\":\"通常：数日以内の対応が望ましい\",\"2\":\"高い：業務停止、重大なアクセス障害、または当日対応が必要\"},\"probabilities\":{\"0\":0.0363,\"1\":0.3654,\"2\":0.5983}},\"refund_request\":{\"type\":\"noul\",\"confidence\":0.9971,\"action\":{\"act_probability\":1.0},\"noul\":0.9971}},\"usage\":{\"input_tokens\":247,\"output_tokens\":0}}",
+      "raw_response_base64": "eyJtb2RlbCI6ImxheWEtcmwtYWdlbnQiLCJhbnN3ZXJzIjp7ImRlcGFydG1lbnQiOnsidHlwZSI6ImNob2ljZSIsImNvbmZpZGVuY2UiOjEuMCwiYWN0aW9uIjp7ImFjdF9wcm9iYWJpbGl0eSI6MS4wfSwiY2hvaWNlIjoiYmlsbGluZyIsInByb2JhYmlsaXRpZXMiOnsiYmlsbGluZyI6MS4wLCJ0ZWNobmljYWwiOjAuMCwiYWNjb3VudCI6MC4wLCJzYWxlcyI6MC4wfX0sInVyZ2VuY3kiOnsidHlwZSI6InNjb3JlIiwiY29uZmlkZW5jZSI6MC4yNzU4LCJhY3Rpb24iOnsiYWN0X3Byb2JhYmlsaXR5IjoxLjB9LCJzY29yZSI6MS41NjIsImxlZ2VuZCI6eyIwIjoi5L2O44GE77ya5oCl44GO44Gn44Gv44Gq44GP44CB5pWw5pel5b6F44Gm44KLIiwiMSI6IumAmuW4uO+8muaVsOaXpeS7peWGheOBruWvvuW/nOOBjOacm+OBvuOBl+OBhCIsIjIiOiLpq5jjgYTvvJrmpa3li5nlgZzmraLjgIHph43lpKfjgarjgqLjgq/jgrvjgrnpmpzlrrPjgIHjgb7jgZ/jga/lvZPml6Xlr77lv5zjgYzlv4XopoEifSwicHJvYmFiaWxpdGllcyI6eyIwIjowLjAzNjMsIjEiOjAuMzY1NCwiMiI6MC41OTgzfX0sInJlZnVuZF9yZXF1ZXN0Ijp7InR5cGUiOiJub3VsIiwiY29uZmlkZW5jZSI6MC45OTcxLCJhY3Rpb24iOnsiYWN0X3Byb2JhYmlsaXR5IjoxLjB9LCJub3VsIjowLjk5NzF9fSwidXNhZ2UiOnsiaW5wdXRfdG9rZW5zIjoyNDcsIm91dHB1dF90b2tlbnMiOjB9fQ==",
+      "raw_response_sha256": "99f80fa5404b7ba5e27277ba69b0c7facb633c064da75870f406460bfdc147b8"
+    },
+    {
+      "id": "b05",
+      "status": 200,
+      "latency_ms": 8.643,
+      "input_audit": {
+        "department": {
+          "instruction_tokens": 11,
+          "option_tokens_with_markers": 69,
+          "state_tokens": 18,
+          "input_tokens": 102
+        },
+        "urgency": {
+          "instruction_tokens": 12,
+          "option_tokens_with_markers": 51,
+          "state_tokens": 18,
+          "input_tokens": 85
+        },
+        "refund_request": {
+          "instruction_tokens": 14,
+          "option_tokens_with_markers": 18,
+          "state_tokens": 18,
+          "input_tokens": 54
+        }
+      },
+      "answers": {
+        "department": {
+          "type": "choice",
+          "confidence": 1.0,
+          "action": {
+            "act_probability": 1.0
+          },
+          "choice": "billing",
+          "probabilities": {
+            "billing": 1.0,
+            "technical": 0.0,
+            "account": 0.0,
+            "sales": 0.0
+          }
+        },
+        "urgency": {
+          "type": "score",
+          "confidence": 0.3225,
+          "action": {
+            "act_probability": 1.0
+          },
+          "score": 1.3605,
+          "legend": {
+            "0": "低い：急ぎではなく、数日待てる",
+            "1": "通常：数日以内の対応が望ましい",
+            "2": "高い：業務停止、重大なアクセス障害、または当日対応が必要"
+          },
+          "probabilities": {
+            "0": 0.0179,
+            "1": 0.6037,
+            "2": 0.3784
+          }
+        },
+        "refund_request": {
+          "type": "noul",
+          "confidence": 0.8807,
+          "action": {
+            "act_probability": 1.0
+          },
+          "noul": 0.1193
+        }
+      },
+      "usage": {
+        "input_tokens": 241,
+        "output_tokens": 0
+      },
+      "raw_response_text": "{\"model\":\"laya-rl-agent\",\"answers\":{\"department\":{\"type\":\"choice\",\"confidence\":1.0,\"action\":{\"act_probability\":1.0},\"choice\":\"billing\",\"probabilities\":{\"billing\":1.0,\"technical\":0.0,\"account\":0.0,\"sales\":0.0}},\"urgency\":{\"type\":\"score\",\"confidence\":0.3225,\"action\":{\"act_probability\":1.0},\"score\":1.3605,\"legend\":{\"0\":\"低い：急ぎではなく、数日待てる\",\"1\":\"通常：数日以内の対応が望ましい\",\"2\":\"高い：業務停止、重大なアクセス障害、または当日対応が必要\"},\"probabilities\":{\"0\":0.0179,\"1\":0.6037,\"2\":0.3784}},\"refund_request\":{\"type\":\"noul\",\"confidence\":0.8807,\"action\":{\"act_probability\":1.0},\"noul\":0.1193}},\"usage\":{\"input_tokens\":241,\"output_tokens\":0}}",
+      "raw_response_base64": "eyJtb2RlbCI6ImxheWEtcmwtYWdlbnQiLCJhbnN3ZXJzIjp7ImRlcGFydG1lbnQiOnsidHlwZSI6ImNob2ljZSIsImNvbmZpZGVuY2UiOjEuMCwiYWN0aW9uIjp7ImFjdF9wcm9iYWJpbGl0eSI6MS4wfSwiY2hvaWNlIjoiYmlsbGluZyIsInByb2JhYmlsaXRpZXMiOnsiYmlsbGluZyI6MS4wLCJ0ZWNobmljYWwiOjAuMCwiYWNjb3VudCI6MC4wLCJzYWxlcyI6MC4wfX0sInVyZ2VuY3kiOnsidHlwZSI6InNjb3JlIiwiY29uZmlkZW5jZSI6MC4zMjI1LCJhY3Rpb24iOnsiYWN0X3Byb2JhYmlsaXR5IjoxLjB9LCJzY29yZSI6MS4zNjA1LCJsZWdlbmQiOnsiMCI6IuS9juOBhO+8muaApeOBjuOBp+OBr+OBquOBj+OAgeaVsOaXpeW+heOBpuOCiyIsIjEiOiLpgJrluLjvvJrmlbDml6Xku6XlhoXjga7lr77lv5zjgYzmnJvjgb7jgZfjgYQiLCIyIjoi6auY44GE77ya5qWt5YuZ5YGc5q2i44CB6YeN5aSn44Gq44Ki44Kv44K744K56Zqc5a6z44CB44G+44Gf44Gv5b2T5pel5a++5b+c44GM5b+F6KaBIn0sInByb2JhYmlsaXRpZXMiOnsiMCI6MC4wMTc5LCIxIjowLjYwMzcsIjIiOjAuMzc4NH19LCJyZWZ1bmRfcmVxdWVzdCI6eyJ0eXBlIjoibm91bCIsImNvbmZpZGVuY2UiOjAuODgwNywiYWN0aW9uIjp7ImFjdF9wcm9iYWJpbGl0eSI6MS4wfSwibm91bCI6MC4xMTkzfX0sInVzYWdlIjp7ImlucHV0X3Rva2VucyI6MjQxLCJvdXRwdXRfdG9rZW5zIjowfX0=",
+      "raw_response_sha256": "0e28c454607f57d728abf044b4ec03072ab3f47d8477fbea7e2bb523e59fd4f5"
+    },
+    {
+      "id": "b06",
+      "status": 200,
+      "latency_ms": 8.453,
+      "input_audit": {
+        "department": {
+          "instruction_tokens": 11,
+          "option_tokens_with_markers": 69,
+          "state_tokens": 10,
+          "input_tokens": 94
+        },
+        "urgency": {
+          "instruction_tokens": 12,
+          "option_tokens_with_markers": 51,
+          "state_tokens": 10,
+          "input_tokens": 77
+        },
+        "refund_request": {
+          "instruction_tokens": 14,
+          "option_tokens_with_markers": 18,
+          "state_tokens": 10,
+          "input_tokens": 46
+        }
+      },
+      "answers": {
+        "department": {
+          "type": "choice",
+          "confidence": 0.9999,
+          "action": {
+            "act_probability": 1.0
+          },
+          "choice": "billing",
+          "probabilities": {
+            "billing": 1.0,
+            "technical": 0.0,
+            "account": 0.0,
+            "sales": 0.0
+          }
+        },
+        "urgency": {
+          "type": "score",
+          "confidence": 0.3319,
+          "action": {
+            "act_probability": 1.0
+          },
+          "score": 1.3507,
+          "legend": {
+            "0": "低い：急ぎではなく、数日待てる",
+            "1": "通常：数日以内の対応が望ましい",
+            "2": "高い：業務停止、重大なアクセス障害、または当日対応が必要"
+          },
+          "probabilities": {
+            "0": 0.0165,
+            "1": 0.6162,
+            "2": 0.3672
+          }
+        },
+        "refund_request": {
+          "type": "noul",
+          "confidence": 0.9695,
+          "action": {
+            "act_probability": 1.0
+          },
+          "noul": 0.0305
+        }
+      },
+      "usage": {
+        "input_tokens": 217,
+        "output_tokens": 0
+      },
+      "raw_response_text": "{\"model\":\"laya-rl-agent\",\"answers\":{\"department\":{\"type\":\"choice\",\"confidence\":0.9999,\"action\":{\"act_probability\":1.0},\"choice\":\"billing\",\"probabilities\":{\"billing\":1.0,\"technical\":0.0,\"account\":0.0,\"sales\":0.0}},\"urgency\":{\"type\":\"score\",\"confidence\":0.3319,\"action\":{\"act_probability\":1.0},\"score\":1.3507,\"legend\":{\"0\":\"低い：急ぎではなく、数日待てる\",\"1\":\"通常：数日以内の対応が望ましい\",\"2\":\"高い：業務停止、重大なアクセス障害、または当日対応が必要\"},\"probabilities\":{\"0\":0.0165,\"1\":0.6162,\"2\":0.3672}},\"refund_request\":{\"type\":\"noul\",\"confidence\":0.9695,\"action\":{\"act_probability\":1.0},\"noul\":0.0305}},\"usage\":{\"input_tokens\":217,\"output_tokens\":0}}",
+      "raw_response_base64": "eyJtb2RlbCI6ImxheWEtcmwtYWdlbnQiLCJhbnN3ZXJzIjp7ImRlcGFydG1lbnQiOnsidHlwZSI6ImNob2ljZSIsImNvbmZpZGVuY2UiOjAuOTk5OSwiYWN0aW9uIjp7ImFjdF9wcm9iYWJpbGl0eSI6MS4wfSwiY2hvaWNlIjoiYmlsbGluZyIsInByb2JhYmlsaXRpZXMiOnsiYmlsbGluZyI6MS4wLCJ0ZWNobmljYWwiOjAuMCwiYWNjb3VudCI6MC4wLCJzYWxlcyI6MC4wfX0sInVyZ2VuY3kiOnsidHlwZSI6InNjb3JlIiwiY29uZmlkZW5jZSI6MC4zMzE5LCJhY3Rpb24iOnsiYWN0X3Byb2JhYmlsaXR5IjoxLjB9LCJzY29yZSI6MS4zNTA3LCJsZWdlbmQiOnsiMCI6IuS9juOBhO+8muaApeOBjuOBp+OBr+OBquOBj+OAgeaVsOaXpeW+heOBpuOCiyIsIjEiOiLpgJrluLjvvJrmlbDml6Xku6XlhoXjga7lr77lv5zjgYzmnJvjgb7jgZfjgYQiLCIyIjoi6auY44GE77ya5qWt5YuZ5YGc5q2i44CB6YeN5aSn44Gq44Ki44Kv44K744K56Zqc5a6z44CB44G+44Gf44Gv5b2T5pel5a++5b+c44GM5b+F6KaBIn0sInByb2JhYmlsaXRpZXMiOnsiMCI6MC4wMTY1LCIxIjowLjYxNjIsIjIiOjAuMzY3Mn19LCJyZWZ1bmRfcmVxdWVzdCI6eyJ0eXBlIjoibm91bCIsImNvbmZpZGVuY2UiOjAuOTY5NSwiYWN0aW9uIjp7ImFjdF9wcm9iYWJpbGl0eSI6MS4wfSwibm91bCI6MC4wMzA1fX0sInVzYWdlIjp7ImlucHV0X3Rva2VucyI6MjE3LCJvdXRwdXRfdG9rZW5zIjowfX0=",
+      "raw_response_sha256": "a0848f28d982e7042c89fee5d1865534356ba83e5921f5c8c302417d72906030"
+    },
+    {
+      "id": "t01",
+      "status": 200,
+      "latency_ms": 7.311,
+      "input_audit": {
+        "department": {
+          "instruction_tokens": 11,
+          "option_tokens_with_markers": 69,
+          "state_tokens": 24,
+          "input_tokens": 108
+        },
+        "urgency": {
+          "instruction_tokens": 12,
+          "option_tokens_with_markers": 51,
+          "state_tokens": 24,
+          "input_tokens": 91
+        },
+        "refund_request": {
+          "instruction_tokens": 14,
+          "option_tokens_with_markers": 18,
+          "state_tokens": 24,
+          "input_tokens": 60
+        }
+      },
+      "answers": {
+        "department": {
+          "type": "choice",
+          "confidence": 0.9298,
+          "action": {
+            "act_probability": 1.0
+          },
+          "choice": "technical",
+          "probabilities": {
+            "billing": 0.0087,
+            "technical": 0.9841,
+            "account": 0.0036,
+            "sales": 0.0036
+          }
+        },
+        "urgency": {
+          "type": "score",
+          "confidence": 0.2611,
+          "action": {
+            "act_probability": 1.0
+          },
+          "score": 1.5946,
+          "legend": {
+            "0": "低い：急ぎではなく、数日待てる",
+            "1": "通常：数日以内の対応が望ましい",
+            "2": "高い：業務停止、重大なアクセス障害、または当日対応が必要"
+          },
+          "probabilities": {
+            "0": 0.0912,
+            "1": 0.2231,
+            "2": 0.6857
+          }
+        },
+        "refund_request": {
+          "type": "noul",
+          "confidence": 0.9414,
+          "action": {
+            "act_probability": 1.0
+          },
+          "noul": 0.0586
+        }
+      },
+      "usage": {
+        "input_tokens": 259,
+        "output_tokens": 0
+      },
+      "raw_response_text": "{\"model\":\"laya-rl-agent\",\"answers\":{\"department\":{\"type\":\"choice\",\"confidence\":0.9298,\"action\":{\"act_probability\":1.0},\"choice\":\"technical\",\"probabilities\":{\"billing\":0.0087,\"technical\":0.9841,\"account\":0.0036,\"sales\":0.0036}},\"urgency\":{\"type\":\"score\",\"confidence\":0.2611,\"action\":{\"act_probability\":1.0},\"score\":1.5946,\"legend\":{\"0\":\"低い：急ぎではなく、数日待てる\",\"1\":\"通常：数日以内の対応が望ましい\",\"2\":\"高い：業務停止、重大なアクセス障害、または当日対応が必要\"},\"probabilities\":{\"0\":0.0912,\"1\":0.2231,\"2\":0.6857}},\"refund_request\":{\"type\":\"noul\",\"confidence\":0.9414,\"action\":{\"act_probability\":1.0},\"noul\":0.0586}},\"usage\":{\"input_tokens\":259,\"output_tokens\":0}}",
+      "raw_response_base64": "eyJtb2RlbCI6ImxheWEtcmwtYWdlbnQiLCJhbnN3ZXJzIjp7ImRlcGFydG1lbnQiOnsidHlwZSI6ImNob2ljZSIsImNvbmZpZGVuY2UiOjAuOTI5OCwiYWN0aW9uIjp7ImFjdF9wcm9iYWJpbGl0eSI6MS4wfSwiY2hvaWNlIjoidGVjaG5pY2FsIiwicHJvYmFiaWxpdGllcyI6eyJiaWxsaW5nIjowLjAwODcsInRlY2huaWNhbCI6MC45ODQxLCJhY2NvdW50IjowLjAwMzYsInNhbGVzIjowLjAwMzZ9fSwidXJnZW5jeSI6eyJ0eXBlIjoic2NvcmUiLCJjb25maWRlbmNlIjowLjI2MTEsImFjdGlvbiI6eyJhY3RfcHJvYmFiaWxpdHkiOjEuMH0sInNjb3JlIjoxLjU5NDYsImxlZ2VuZCI6eyIwIjoi5L2O44GE77ya5oCl44GO44Gn44Gv44Gq44GP44CB5pWw5pel5b6F44Gm44KLIiwiMSI6IumAmuW4uO+8muaVsOaXpeS7peWGheOBruWvvuW/nOOBjOacm+OBvuOBl+OBhCIsIjIiOiLpq5jjgYTvvJrmpa3li5nlgZzmraLjgIHph43lpKfjgarjgqLjgq/jgrvjgrnpmpzlrrPjgIHjgb7jgZ/jga/lvZPml6Xlr77lv5zjgYzlv4XopoEifSwicHJvYmFiaWxpdGllcyI6eyIwIjowLjA5MTIsIjEiOjAuMjIzMSwiMiI6MC42ODU3fX0sInJlZnVuZF9yZXF1ZXN0Ijp7InR5cGUiOiJub3VsIiwiY29uZmlkZW5jZSI6MC45NDE0LCJhY3Rpb24iOnsiYWN0X3Byb2JhYmlsaXR5IjoxLjB9LCJub3VsIjowLjA1ODZ9fSwidXNhZ2UiOnsiaW5wdXRfdG9rZW5zIjoyNTksIm91dHB1dF90b2tlbnMiOjB9fQ==",
+      "raw_response_sha256": "5dad15005867aad6e52e54eec7852ad57529b552a1835f81b6e83bc4dd279ea2"
+    },
+    {
+      "id": "t02",
+      "status": 200,
+      "latency_ms": 8.652,
+      "input_audit": {
+        "department": {
+          "instruction_tokens": 11,
+          "option_tokens_with_markers": 69,
+          "state_tokens": 13,
+          "input_tokens": 97
+        },
+        "urgency": {
+          "instruction_tokens": 12,
+          "option_tokens_with_markers": 51,
+          "state_tokens": 13,
+          "input_tokens": 80
+        },
+        "refund_request": {
+          "instruction_tokens": 14,
+          "option_tokens_with_markers": 18,
+          "state_tokens": 13,
+          "input_tokens": 49
+        }
+      },
+      "answers": {
+        "department": {
+          "type": "choice",
+          "confidence": 0.9273,
+          "action": {
+            "act_probability": 1.0
+          },
+          "choice": "account",
+          "probabilities": {
+            "billing": 0.0011,
+            "technical": 0.0153,
+            "account": 0.9818,
+            "sales": 0.0018
+          }
+        },
+        "urgency": {
+          "type": "score",
+          "confidence": 0.314,
+          "action": {
+            "act_probability": 1.0
+          },
+          "score": 1.4248,
+          "legend": {
+            "0": "低い：急ぎではなく、数日待てる",
+            "1": "通常：数日以内の対応が望ましい",
+            "2": "高い：業務停止、重大なアクセス障害、または当日対応が必要"
+          },
+          "probabilities": {
+            "0": 0.0146,
+            "1": 0.5459,
+            "2": 0.4394
+          }
+        },
+        "refund_request": {
+          "type": "noul",
+          "confidence": 0.9997,
+          "action": {
+            "act_probability": 1.0
+          },
+          "noul": 0.0003
+        }
+      },
+      "usage": {
+        "input_tokens": 226,
+        "output_tokens": 0
+      },
+      "raw_response_text": "{\"model\":\"laya-rl-agent\",\"answers\":{\"department\":{\"type\":\"choice\",\"confidence\":0.9273,\"action\":{\"act_probability\":1.0},\"choice\":\"account\",\"probabilities\":{\"billing\":0.0011,\"technical\":0.0153,\"account\":0.9818,\"sales\":0.0018}},\"urgency\":{\"type\":\"score\",\"confidence\":0.314,\"action\":{\"act_probability\":1.0},\"score\":1.4248,\"legend\":{\"0\":\"低い：急ぎではなく、数日待てる\",\"1\":\"通常：数日以内の対応が望ましい\",\"2\":\"高い：業務停止、重大なアクセス障害、または当日対応が必要\"},\"probabilities\":{\"0\":0.0146,\"1\":0.5459,\"2\":0.4394}},\"refund_request\":{\"type\":\"noul\",\"confidence\":0.9997,\"action\":{\"act_probability\":1.0},\"noul\":0.0003}},\"usage\":{\"input_tokens\":226,\"output_tokens\":0}}",
+      "raw_response_base64": "eyJtb2RlbCI6ImxheWEtcmwtYWdlbnQiLCJhbnN3ZXJzIjp7ImRlcGFydG1lbnQiOnsidHlwZSI6ImNob2ljZSIsImNvbmZpZGVuY2UiOjAuOTI3MywiYWN0aW9uIjp7ImFjdF9wcm9iYWJpbGl0eSI6MS4wfSwiY2hvaWNlIjoiYWNjb3VudCIsInByb2JhYmlsaXRpZXMiOnsiYmlsbGluZyI6MC4wMDExLCJ0ZWNobmljYWwiOjAuMDE1MywiYWNjb3VudCI6MC45ODE4LCJzYWxlcyI6MC4wMDE4fX0sInVyZ2VuY3kiOnsidHlwZSI6InNjb3JlIiwiY29uZmlkZW5jZSI6MC4zMTQsImFjdGlvbiI6eyJhY3RfcHJvYmFiaWxpdHkiOjEuMH0sInNjb3JlIjoxLjQyNDgsImxlZ2VuZCI6eyIwIjoi5L2O44GE77ya5oCl44GO44Gn44Gv44Gq44GP44CB5pWw5pel5b6F44Gm44KLIiwiMSI6IumAmuW4uO+8muaVsOaXpeS7peWGheOBruWvvuW/nOOBjOacm+OBvuOBl+OBhCIsIjIiOiLpq5jjgYTvvJrmpa3li5nlgZzmraLjgIHph43lpKfjgarjgqLjgq/jgrvjgrnpmpzlrrPjgIHjgb7jgZ/jga/lvZPml6Xlr77lv5zjgYzlv4XopoEifSwicHJvYmFiaWxpdGllcyI6eyIwIjowLjAxNDYsIjEiOjAuNTQ1OSwiMiI6MC40Mzk0fX0sInJlZnVuZF9yZXF1ZXN0Ijp7InR5cGUiOiJub3VsIiwiY29uZmlkZW5jZSI6MC45OTk3LCJhY3Rpb24iOnsiYWN0X3Byb2JhYmlsaXR5IjoxLjB9LCJub3VsIjowLjAwMDN9fSwidXNhZ2UiOnsiaW5wdXRfdG9rZW5zIjoyMjYsIm91dHB1dF90b2tlbnMiOjB9fQ==",
+      "raw_response_sha256": "104af6382565804a5906b3aaabcfec59bbcdf343a52b32cd9c5f5dfdd314b257"
+    },
+    {
+      "id": "t03",
+      "status": 200,
+      "latency_ms": 8.965,
+      "input_audit": {
+        "department": {
+          "instruction_tokens": 11,
+          "option_tokens_with_markers": 69,
+          "state_tokens": 21,
+          "input_tokens": 105
+        },
+        "urgency": {
+          "instruction_tokens": 12,
+          "option_tokens_with_markers": 51,
+          "state_tokens": 21,
+          "input_tokens": 88
+        },
+        "refund_request": {
+          "instruction_tokens": 14,
+          "option_tokens_with_markers": 18,
+          "state_tokens": 21,
+          "input_tokens": 57
+        }
+      },
+      "answers": {
+        "department": {
+          "type": "choice",
+          "confidence": 0.4112,
+          "action": {
+            "act_probability": 1.0
+          },
+          "choice": "technical",
+          "probabilities": {
+            "billing": 0.0811,
+            "technical": 0.7385,
+            "account": 0.0291,
+            "sales": 0.1512
+          }
+        },
+        "urgency": {
+          "type": "score",
+          "confidence": 0.3288,
+          "action": {
+            "act_probability": 1.0
+          },
+          "score": 1.1614,
+          "legend": {
+            "0": "低い：急ぎではなく、数日待てる",
+            "1": "通常：数日以内の対応が望ましい",
+            "2": "高い：業務停止、重大なアクセス障害、または当日対応が必要"
+          },
+          "probabilities": {
+            "0": 0.0593,
+            "1": 0.72,
+            "2": 0.2207
+          }
+        },
+        "refund_request": {
+          "type": "noul",
+          "confidence": 0.9981,
+          "action": {
+            "act_probability": 1.0
+          },
+          "noul": 0.0019
+        }
+      },
+      "usage": {
+        "input_tokens": 250,
+        "output_tokens": 0
+      },
+      "raw_response_text": "{\"model\":\"laya-rl-agent\",\"answers\":{\"department\":{\"type\":\"choice\",\"confidence\":0.4112,\"action\":{\"act_probability\":1.0},\"choice\":\"technical\",\"probabilities\":{\"billing\":0.0811,\"technical\":0.7385,\"account\":0.0291,\"sales\":0.1512}},\"urgency\":{\"type\":\"score\",\"confidence\":0.3288,\"action\":{\"act_probability\":1.0},\"score\":1.1614,\"legend\":{\"0\":\"低い：急ぎではなく、数日待てる\",\"1\":\"通常：数日以内の対応が望ましい\",\"2\":\"高い：業務停止、重大なアクセス障害、または当日対応が必要\"},\"probabilities\":{\"0\":0.0593,\"1\":0.72,\"2\":0.2207}},\"refund_request\":{\"type\":\"noul\",\"confidence\":0.9981,\"action\":{\"act_probability\":1.0},\"noul\":0.0019}},\"usage\":{\"input_tokens\":250,\"output_tokens\":0}}",
+      "raw_response_base64": "eyJtb2RlbCI6ImxheWEtcmwtYWdlbnQiLCJhbnN3ZXJzIjp7ImRlcGFydG1lbnQiOnsidHlwZSI6ImNob2ljZSIsImNvbmZpZGVuY2UiOjAuNDExMiwiYWN0aW9uIjp7ImFjdF9wcm9iYWJpbGl0eSI6MS4wfSwiY2hvaWNlIjoidGVjaG5pY2FsIiwicHJvYmFiaWxpdGllcyI6eyJiaWxsaW5nIjowLjA4MTEsInRlY2huaWNhbCI6MC43Mzg1LCJhY2NvdW50IjowLjAyOTEsInNhbGVzIjowLjE1MTJ9fSwidXJnZW5jeSI6eyJ0eXBlIjoic2NvcmUiLCJjb25maWRlbmNlIjowLjMyODgsImFjdGlvbiI6eyJhY3RfcHJvYmFiaWxpdHkiOjEuMH0sInNjb3JlIjoxLjE2MTQsImxlZ2VuZCI6eyIwIjoi5L2O44GE77ya5oCl44GO44Gn44Gv44Gq44GP44CB5pWw5pel5b6F44Gm44KLIiwiMSI6IumAmuW4uO+8muaVsOaXpeS7peWGheOBruWvvuW/nOOBjOacm+OBvuOBl+OBhCIsIjIiOiLpq5jjgYTvvJrmpa3li5nlgZzmraLjgIHph43lpKfjgarjgqLjgq/jgrvjgrnpmpzlrrPjgIHjgb7jgZ/jga/lvZPml6Xlr77lv5zjgYzlv4XopoEifSwicHJvYmFiaWxpdGllcyI6eyIwIjowLjA1OTMsIjEiOjAuNzIsIjIiOjAuMjIwN319LCJyZWZ1bmRfcmVxdWVzdCI6eyJ0eXBlIjoibm91bCIsImNvbmZpZGVuY2UiOjAuOTk4MSwiYWN0aW9uIjp7ImFjdF9wcm9iYWJpbGl0eSI6MS4wfSwibm91bCI6MC4wMDE5fX0sInVzYWdlIjp7ImlucHV0X3Rva2VucyI6MjUwLCJvdXRwdXRfdG9rZW5zIjowfX0=",
+      "raw_response_sha256": "1142c2bedddf8eefb8e7a625e18ea89cdf9104ddd1c000a16a848635039a9be9"
+    },
+    {
+      "id": "t04",
+      "status": 200,
+      "latency_ms": 8.41,
+      "input_audit": {
+        "department": {
+          "instruction_tokens": 11,
+          "option_tokens_with_markers": 69,
+          "state_tokens": 13,
+          "input_tokens": 97
+        },
+        "urgency": {
+          "instruction_tokens": 12,
+          "option_tokens_with_markers": 51,
+          "state_tokens": 13,
+          "input_tokens": 80
+        },
+        "refund_request": {
+          "instruction_tokens": 14,
+          "option_tokens_with_markers": 18,
+          "state_tokens": 13,
+          "input_tokens": 49
+        }
+      },
+      "answers": {
+        "department": {
+          "type": "choice",
+          "confidence": 0.8786,
+          "action": {
+            "act_probability": 1.0
+          },
+          "choice": "technical",
+          "probabilities": {
+            "billing": 0.0098,
+            "technical": 0.9699,
+            "account": 0.0104,
+            "sales": 0.0099
+          }
+        },
+        "urgency": {
+          "type": "score",
+          "confidence": 0.2223,
+          "action": {
+            "act_probability": 1.0
+          },
+          "score": 1.3265,
+          "legend": {
+            "0": "低い：急ぎではなく、数日待てる",
+            "1": "通常：数日以内の対応が望ましい",
+            "2": "高い：業務停止、重大なアクセス障害、または当日対応が必要"
+          },
+          "probabilities": {
+            "0": 0.0565,
+            "1": 0.5605,
+            "2": 0.383
+          }
+        },
+        "refund_request": {
+          "type": "noul",
+          "confidence": 0.9995,
+          "action": {
+            "act_probability": 1.0
+          },
+          "noul": 0.0005
+        }
+      },
+      "usage": {
+        "input_tokens": 226,
+        "output_tokens": 0
+      },
+      "raw_response_text": "{\"model\":\"laya-rl-agent\",\"answers\":{\"department\":{\"type\":\"choice\",\"confidence\":0.8786,\"action\":{\"act_probability\":1.0},\"choice\":\"technical\",\"probabilities\":{\"billing\":0.0098,\"technical\":0.9699,\"account\":0.0104,\"sales\":0.0099}},\"urgency\":{\"type\":\"score\",\"confidence\":0.2223,\"action\":{\"act_probability\":1.0},\"score\":1.3265,\"legend\":{\"0\":\"低い：急ぎではなく、数日待てる\",\"1\":\"通常：数日以内の対応が望ましい\",\"2\":\"高い：業務停止、重大なアクセス障害、または当日対応が必要\"},\"probabilities\":{\"0\":0.0565,\"1\":0.5605,\"2\":0.383}},\"refund_request\":{\"type\":\"noul\",\"confidence\":0.9995,\"action\":{\"act_probability\":1.0},\"noul\":0.0005}},\"usage\":{\"input_tokens\":226,\"output_tokens\":0}}",
+      "raw_response_base64": "eyJtb2RlbCI6ImxheWEtcmwtYWdlbnQiLCJhbnN3ZXJzIjp7ImRlcGFydG1lbnQiOnsidHlwZSI6ImNob2ljZSIsImNvbmZpZGVuY2UiOjAuODc4NiwiYWN0aW9uIjp7ImFjdF9wcm9iYWJpbGl0eSI6MS4wfSwiY2hvaWNlIjoidGVjaG5pY2FsIiwicHJvYmFiaWxpdGllcyI6eyJiaWxsaW5nIjowLjAwOTgsInRlY2huaWNhbCI6MC45Njk5LCJhY2NvdW50IjowLjAxMDQsInNhbGVzIjowLjAwOTl9fSwidXJnZW5jeSI6eyJ0eXBlIjoic2NvcmUiLCJjb25maWRlbmNlIjowLjIyMjMsImFjdGlvbiI6eyJhY3RfcHJvYmFiaWxpdHkiOjEuMH0sInNjb3JlIjoxLjMyNjUsImxlZ2VuZCI6eyIwIjoi5L2O44GE77ya5oCl44GO44Gn44Gv44Gq44GP44CB5pWw5pel5b6F44Gm44KLIiwiMSI6IumAmuW4uO+8muaVsOaXpeS7peWGheOBruWvvuW/nOOBjOacm+OBvuOBl+OBhCIsIjIiOiLpq5jjgYTvvJrmpa3li5nlgZzmraLjgIHph43lpKfjgarjgqLjgq/jgrvjgrnpmpzlrrPjgIHjgb7jgZ/jga/lvZPml6Xlr77lv5zjgYzlv4XopoEifSwicHJvYmFiaWxpdGllcyI6eyIwIjowLjA1NjUsIjEiOjAuNTYwNSwiMiI6MC4zODN9fSwicmVmdW5kX3JlcXVlc3QiOnsidHlwZSI6Im5vdWwiLCJjb25maWRlbmNlIjowLjk5OTUsImFjdGlvbiI6eyJhY3RfcHJvYmFiaWxpdHkiOjEuMH0sIm5vdWwiOjAuMDAwNX19LCJ1c2FnZSI6eyJpbnB1dF90b2tlbnMiOjIyNiwib3V0cHV0X3Rva2VucyI6MH19",
+      "raw_response_sha256": "ce010c4c6b006c0dff1d5fcb1795261b78131feab642e7426be99cfa857d04f0"
+    },
+    {
+      "id": "t05",
+      "status": 200,
+      "latency_ms": 8.459,
+      "input_audit": {
+        "department": {
+          "instruction_tokens": 11,
+          "option_tokens_with_markers": 69,
+          "state_tokens": 14,
+          "input_tokens": 98
+        },
+        "urgency": {
+          "instruction_tokens": 12,
+          "option_tokens_with_markers": 51,
+          "state_tokens": 14,
+          "input_tokens": 81
+        },
+        "refund_request": {
+          "instruction_tokens": 14,
+          "option_tokens_with_markers": 18,
+          "state_tokens": 14,
+          "input_tokens": 50
+        }
+      },
+      "answers": {
+        "department": {
+          "type": "choice",
+          "confidence": 0.8296,
+          "action": {
+            "act_probability": 1.0
+          },
+          "choice": "technical",
+          "probabilities": {
+            "billing": 0.0197,
+            "technical": 0.9539,
+            "account": 0.011,
+            "sales": 0.0155
+          }
+        },
+        "urgency": {
+          "type": "score",
+          "confidence": 0.285,
+          "action": {
+            "act_probability": 1.0
+          },
+          "score": 1.3962,
+          "legend": {
+            "0": "低い：急ぎではなく、数日待てる",
+            "1": "通常：数日以内の対応が望ましい",
+            "2": "高い：業務停止、重大なアクセス障害、または当日対応が必要"
+          },
+          "probabilities": {
+            "0": 0.0256,
+            "1": 0.5527,
+            "2": 0.4217
+          }
+        },
+        "refund_request": {
+          "type": "noul",
+          "confidence": 0.9987,
+          "action": {
+            "act_probability": 1.0
+          },
+          "noul": 0.0013
+        }
+      },
+      "usage": {
+        "input_tokens": 229,
+        "output_tokens": 0
+      },
+      "raw_response_text": "{\"model\":\"laya-rl-agent\",\"answers\":{\"department\":{\"type\":\"choice\",\"confidence\":0.8296,\"action\":{\"act_probability\":1.0},\"choice\":\"technical\",\"probabilities\":{\"billing\":0.0197,\"technical\":0.9539,\"account\":0.011,\"sales\":0.0155}},\"urgency\":{\"type\":\"score\",\"confidence\":0.285,\"action\":{\"act_probability\":1.0},\"score\":1.3962,\"legend\":{\"0\":\"低い：急ぎではなく、数日待てる\",\"1\":\"通常：数日以内の対応が望ましい\",\"2\":\"高い：業務停止、重大なアクセス障害、または当日対応が必要\"},\"probabilities\":{\"0\":0.0256,\"1\":0.5527,\"2\":0.4217}},\"refund_request\":{\"type\":\"noul\",\"confidence\":0.9987,\"action\":{\"act_probability\":1.0},\"noul\":0.0013}},\"usage\":{\"input_tokens\":229,\"output_tokens\":0}}",
+      "raw_response_base64": "eyJtb2RlbCI6ImxheWEtcmwtYWdlbnQiLCJhbnN3ZXJzIjp7ImRlcGFydG1lbnQiOnsidHlwZSI6ImNob2ljZSIsImNvbmZpZGVuY2UiOjAuODI5NiwiYWN0aW9uIjp7ImFjdF9wcm9iYWJpbGl0eSI6MS4wfSwiY2hvaWNlIjoidGVjaG5pY2FsIiwicHJvYmFiaWxpdGllcyI6eyJiaWxsaW5nIjowLjAxOTcsInRlY2huaWNhbCI6MC45NTM5LCJhY2NvdW50IjowLjAxMSwic2FsZXMiOjAuMDE1NX19LCJ1cmdlbmN5Ijp7InR5cGUiOiJzY29yZSIsImNvbmZpZGVuY2UiOjAuMjg1LCJhY3Rpb24iOnsiYWN0X3Byb2JhYmlsaXR5IjoxLjB9LCJzY29yZSI6MS4zOTYyLCJsZWdlbmQiOnsiMCI6IuS9juOBhO+8muaApeOBjuOBp+OBr+OBquOBj+OAgeaVsOaXpeW+heOBpuOCiyIsIjEiOiLpgJrluLjvvJrmlbDml6Xku6XlhoXjga7lr77lv5zjgYzmnJvjgb7jgZfjgYQiLCIyIjoi6auY44GE77ya5qWt5YuZ5YGc5q2i44CB6YeN5aSn44Gq44Ki44Kv44K744K56Zqc5a6z44CB44G+44Gf44Gv5b2T5pel5a++5b+c44GM5b+F6KaBIn0sInByb2JhYmlsaXRpZXMiOnsiMCI6MC4wMjU2LCIxIjowLjU1MjcsIjIiOjAuNDIxN319LCJyZWZ1bmRfcmVxdWVzdCI6eyJ0eXBlIjoibm91bCIsImNvbmZpZGVuY2UiOjAuOTk4NywiYWN0aW9uIjp7ImFjdF9wcm9iYWJpbGl0eSI6MS4wfSwibm91bCI6MC4wMDEzfX0sInVzYWdlIjp7ImlucHV0X3Rva2VucyI6MjI5LCJvdXRwdXRfdG9rZW5zIjowfX0=",
+      "raw_response_sha256": "8a684c3a8d290aec1704eff7b6445b71dfcd087875351f3cd1df2d1cabf2b1de"
+    },
+    {
+      "id": "t06",
+      "status": 200,
+      "latency_ms": 8.646,
+      "input_audit": {
+        "department": {
+          "instruction_tokens": 11,
+          "option_tokens_with_markers": 69,
+          "state_tokens": 15,
+          "input_tokens": 99
+        },
+        "urgency": {
+          "instruction_tokens": 12,
+          "option_tokens_with_markers": 51,
+          "state_tokens": 15,
+          "input_tokens": 82
+        },
+        "refund_request": {
+          "instruction_tokens": 14,
+          "option_tokens_with_markers": 18,
+          "state_tokens": 15,
+          "input_tokens": 51
+        }
+      },
+      "answers": {
+        "department": {
+          "type": "choice",
+          "confidence": 0.701,
+          "action": {
+            "act_probability": 1.0
+          },
+          "choice": "technical",
+          "probabilities": {
+            "billing": 0.0118,
+            "technical": 0.8907,
+            "account": 0.0875,
+            "sales": 0.0099
+          }
+        },
+        "urgency": {
+          "type": "score",
+          "confidence": 0.3042,
+          "action": {
+            "act_probability": 1.0
+          },
+          "score": 1.4028,
+          "legend": {
+            "0": "低い：急ぎではなく、数日待てる",
+            "1": "通常：数日以内の対応が望ましい",
+            "2": "高い：業務停止、重大なアクセス障害、または当日対応が必要"
+          },
+          "probabilities": {
+            "0": 0.019,
+            "1": 0.5593,
+            "2": 0.4217
+          }
+        },
+        "refund_request": {
+          "type": "noul",
+          "confidence": 0.9997,
+          "action": {
+            "act_probability": 1.0
+          },
+          "noul": 0.0003
+        }
+      },
+      "usage": {
+        "input_tokens": 232,
+        "output_tokens": 0
+      },
+      "raw_response_text": "{\"model\":\"laya-rl-agent\",\"answers\":{\"department\":{\"type\":\"choice\",\"confidence\":0.701,\"action\":{\"act_probability\":1.0},\"choice\":\"technical\",\"probabilities\":{\"billing\":0.0118,\"technical\":0.8907,\"account\":0.0875,\"sales\":0.0099}},\"urgency\":{\"type\":\"score\",\"confidence\":0.3042,\"action\":{\"act_probability\":1.0},\"score\":1.4028,\"legend\":{\"0\":\"低い：急ぎではなく、数日待てる\",\"1\":\"通常：数日以内の対応が望ましい\",\"2\":\"高い：業務停止、重大なアクセス障害、または当日対応が必要\"},\"probabilities\":{\"0\":0.019,\"1\":0.5593,\"2\":0.4217}},\"refund_request\":{\"type\":\"noul\",\"confidence\":0.9997,\"action\":{\"act_probability\":1.0},\"noul\":0.0003}},\"usage\":{\"input_tokens\":232,\"output_tokens\":0}}",
+      "raw_response_base64": "eyJtb2RlbCI6ImxheWEtcmwtYWdlbnQiLCJhbnN3ZXJzIjp7ImRlcGFydG1lbnQiOnsidHlwZSI6ImNob2ljZSIsImNvbmZpZGVuY2UiOjAuNzAxLCJhY3Rpb24iOnsiYWN0X3Byb2JhYmlsaXR5IjoxLjB9LCJjaG9pY2UiOiJ0ZWNobmljYWwiLCJwcm9iYWJpbGl0aWVzIjp7ImJpbGxpbmciOjAuMDExOCwidGVjaG5pY2FsIjowLjg5MDcsImFjY291bnQiOjAuMDg3NSwic2FsZXMiOjAuMDA5OX19LCJ1cmdlbmN5Ijp7InR5cGUiOiJzY29yZSIsImNvbmZpZGVuY2UiOjAuMzA0MiwiYWN0aW9uIjp7ImFjdF9wcm9iYWJpbGl0eSI6MS4wfSwic2NvcmUiOjEuNDAyOCwibGVnZW5kIjp7IjAiOiLkvY7jgYTvvJrmgKXjgY7jgafjga/jgarjgY/jgIHmlbDml6XlvoXjgabjgosiLCIxIjoi6YCa5bi477ya5pWw5pel5Lul5YaF44Gu5a++5b+c44GM5pyb44G+44GX44GEIiwiMiI6IumrmOOBhO+8mualreWLmeWBnOatouOAgemHjeWkp+OBquOCouOCr+OCu+OCuemanOWus+OAgeOBvuOBn+OBr+W9k+aXpeWvvuW/nOOBjOW/heimgSJ9LCJwcm9iYWJpbGl0aWVzIjp7IjAiOjAuMDE5LCIxIjowLjU1OTMsIjIiOjAuNDIxN319LCJyZWZ1bmRfcmVxdWVzdCI6eyJ0eXBlIjoibm91bCIsImNvbmZpZGVuY2UiOjAuOTk5NywiYWN0aW9uIjp7ImFjdF9wcm9iYWJpbGl0eSI6MS4wfSwibm91bCI6MC4wMDAzfX0sInVzYWdlIjp7ImlucHV0X3Rva2VucyI6MjMyLCJvdXRwdXRfdG9rZW5zIjowfX0=",
+      "raw_response_sha256": "e00d721f354a1187ff885d353ce0766c0ef21dafc94327986a49d358baa4959d"
+    },
+    {
+      "id": "a01",
+      "status": 200,
+      "latency_ms": 8.377,
+      "input_audit": {
+        "department": {
+          "instruction_tokens": 11,
+          "option_tokens_with_markers": 69,
+          "state_tokens": 11,
+          "input_tokens": 95
+        },
+        "urgency": {
+          "instruction_tokens": 12,
+          "option_tokens_with_markers": 51,
+          "state_tokens": 11,
+          "input_tokens": 78
+        },
+        "refund_request": {
+          "instruction_tokens": 14,
+          "option_tokens_with_markers": 18,
+          "state_tokens": 11,
+          "input_tokens": 47
+        }
+      },
+      "answers": {
+        "department": {
+          "type": "choice",
+          "confidence": 0.9994,
+          "action": {
+            "act_probability": 1.0
+          },
+          "choice": "account",
+          "probabilities": {
+            "billing": 0.0,
+            "technical": 0.0001,
+            "account": 0.9999,
+            "sales": 0.0
+          }
+        },
+        "urgency": {
+          "type": "score",
+          "confidence": 0.3176,
+          "action": {
+            "act_probability": 1.0
+          },
+          "score": 1.3387,
+          "legend": {
+            "0": "低い：急ぎではなく、数日待てる",
+            "1": "通常：数日以内の対応が望ましい",
+            "2": "高い：業務停止、重大なアクセス障害、または当日対応が必要"
+          },
+          "probabilities": {
+            "0": 0.022,
+            "1": 0.6172,
+            "2": 0.3607
+          }
+        },
+        "refund_request": {
+          "type": "noul",
+          "confidence": 0.9985,
+          "action": {
+            "act_probability": 1.0
+          },
+          "noul": 0.0015
+        }
+      },
+      "usage": {
+        "input_tokens": 220,
+        "output_tokens": 0
+      },
+      "raw_response_text": "{\"model\":\"laya-rl-agent\",\"answers\":{\"department\":{\"type\":\"choice\",\"confidence\":0.9994,\"action\":{\"act_probability\":1.0},\"choice\":\"account\",\"probabilities\":{\"billing\":0.0,\"technical\":0.0001,\"account\":0.9999,\"sales\":0.0}},\"urgency\":{\"type\":\"score\",\"confidence\":0.3176,\"action\":{\"act_probability\":1.0},\"score\":1.3387,\"legend\":{\"0\":\"低い：急ぎではなく、数日待てる\",\"1\":\"通常：数日以内の対応が望ましい\",\"2\":\"高い：業務停止、重大なアクセス障害、または当日対応が必要\"},\"probabilities\":{\"0\":0.022,\"1\":0.6172,\"2\":0.3607}},\"refund_request\":{\"type\":\"noul\",\"confidence\":0.9985,\"action\":{\"act_probability\":1.0},\"noul\":0.0015}},\"usage\":{\"input_tokens\":220,\"output_tokens\":0}}",
+      "raw_response_base64": "eyJtb2RlbCI6ImxheWEtcmwtYWdlbnQiLCJhbnN3ZXJzIjp7ImRlcGFydG1lbnQiOnsidHlwZSI6ImNob2ljZSIsImNvbmZpZGVuY2UiOjAuOTk5NCwiYWN0aW9uIjp7ImFjdF9wcm9iYWJpbGl0eSI6MS4wfSwiY2hvaWNlIjoiYWNjb3VudCIsInByb2JhYmlsaXRpZXMiOnsiYmlsbGluZyI6MC4wLCJ0ZWNobmljYWwiOjAuMDAwMSwiYWNjb3VudCI6MC45OTk5LCJzYWxlcyI6MC4wfX0sInVyZ2VuY3kiOnsidHlwZSI6InNjb3JlIiwiY29uZmlkZW5jZSI6MC4zMTc2LCJhY3Rpb24iOnsiYWN0X3Byb2JhYmlsaXR5IjoxLjB9LCJzY29yZSI6MS4zMzg3LCJsZWdlbmQiOnsiMCI6IuS9juOBhO+8muaApeOBjuOBp+OBr+OBquOBj+OAgeaVsOaXpeW+heOBpuOCiyIsIjEiOiLpgJrluLjvvJrmlbDml6Xku6XlhoXjga7lr77lv5zjgYzmnJvjgb7jgZfjgYQiLCIyIjoi6auY44GE77ya5qWt5YuZ5YGc5q2i44CB6YeN5aSn44Gq44Ki44Kv44K744K56Zqc5a6z44CB44G+44Gf44Gv5b2T5pel5a++5b+c44GM5b+F6KaBIn0sInByb2JhYmlsaXRpZXMiOnsiMCI6MC4wMjIsIjEiOjAuNjE3MiwiMiI6MC4zNjA3fX0sInJlZnVuZF9yZXF1ZXN0Ijp7InR5cGUiOiJub3VsIiwiY29uZmlkZW5jZSI6MC45OTg1LCJhY3Rpb24iOnsiYWN0X3Byb2JhYmlsaXR5IjoxLjB9LCJub3VsIjowLjAwMTV9fSwidXNhZ2UiOnsiaW5wdXRfdG9rZW5zIjoyMjAsIm91dHB1dF90b2tlbnMiOjB9fQ==",
+      "raw_response_sha256": "554fc876e167b591556aa9e509451361bbac0dd67b7ebafa52d8ac17056e8320"
+    },
+    {
+      "id": "a02",
+      "status": 200,
+      "latency_ms": 8.479,
+      "input_audit": {
+        "department": {
+          "instruction_tokens": 11,
+          "option_tokens_with_markers": 69,
+          "state_tokens": 17,
+          "input_tokens": 101
+        },
+        "urgency": {
+          "instruction_tokens": 12,
+          "option_tokens_with_markers": 51,
+          "state_tokens": 17,
+          "input_tokens": 84
+        },
+        "refund_request": {
+          "instruction_tokens": 14,
+          "option_tokens_with_markers": 18,
+          "state_tokens": 17,
+          "input_tokens": 53
+        }
+      },
+      "answers": {
+        "department": {
+          "type": "choice",
+          "confidence": 0.5207,
+          "action": {
+            "act_probability": 1.0
+          },
+          "choice": "account",
+          "probabilities": {
+            "billing": 0.0034,
+            "technical": 0.3125,
+            "account": 0.6806,
+            "sales": 0.0034
+          }
+        },
+        "urgency": {
+          "type": "score",
+          "confidence": 0.3725,
+          "action": {
+            "act_probability": 1.0
+          },
+          "score": 1.2849,
+          "legend": {
+            "0": "低い：急ぎではなく、数日待てる",
+            "1": "通常：数日以内の対応が望ましい",
+            "2": "高い：業務停止、重大なアクセス障害、または当日対応が必要"
+          },
+          "probabilities": {
+            "0": 0.0163,
+            "1": 0.6824,
+            "2": 0.3012
+          }
+        },
+        "refund_request": {
+          "type": "noul",
+          "confidence": 0.9997,
+          "action": {
+            "act_probability": 1.0
+          },
+          "noul": 0.0003
+        }
+      },
+      "usage": {
+        "input_tokens": 238,
+        "output_tokens": 0
+      },
+      "raw_response_text": "{\"model\":\"laya-rl-agent\",\"answers\":{\"department\":{\"type\":\"choice\",\"confidence\":0.5207,\"action\":{\"act_probability\":1.0},\"choice\":\"account\",\"probabilities\":{\"billing\":0.0034,\"technical\":0.3125,\"account\":0.6806,\"sales\":0.0034}},\"urgency\":{\"type\":\"score\",\"confidence\":0.3725,\"action\":{\"act_probability\":1.0},\"score\":1.2849,\"legend\":{\"0\":\"低い：急ぎではなく、数日待てる\",\"1\":\"通常：数日以内の対応が望ましい\",\"2\":\"高い：業務停止、重大なアクセス障害、または当日対応が必要\"},\"probabilities\":{\"0\":0.0163,\"1\":0.6824,\"2\":0.3012}},\"refund_request\":{\"type\":\"noul\",\"confidence\":0.9997,\"action\":{\"act_probability\":1.0},\"noul\":0.0003}},\"usage\":{\"input_tokens\":238,\"output_tokens\":0}}",
+      "raw_response_base64": "eyJtb2RlbCI6ImxheWEtcmwtYWdlbnQiLCJhbnN3ZXJzIjp7ImRlcGFydG1lbnQiOnsidHlwZSI6ImNob2ljZSIsImNvbmZpZGVuY2UiOjAuNTIwNywiYWN0aW9uIjp7ImFjdF9wcm9iYWJpbGl0eSI6MS4wfSwiY2hvaWNlIjoiYWNjb3VudCIsInByb2JhYmlsaXRpZXMiOnsiYmlsbGluZyI6MC4wMDM0LCJ0ZWNobmljYWwiOjAuMzEyNSwiYWNjb3VudCI6MC42ODA2LCJzYWxlcyI6MC4wMDM0fX0sInVyZ2VuY3kiOnsidHlwZSI6InNjb3JlIiwiY29uZmlkZW5jZSI6MC4zNzI1LCJhY3Rpb24iOnsiYWN0X3Byb2JhYmlsaXR5IjoxLjB9LCJzY29yZSI6MS4yODQ5LCJsZWdlbmQiOnsiMCI6IuS9juOBhO+8muaApeOBjuOBp+OBr+OBquOBj+OAgeaVsOaXpeW+heOBpuOCiyIsIjEiOiLpgJrluLjvvJrmlbDml6Xku6XlhoXjga7lr77lv5zjgYzmnJvjgb7jgZfjgYQiLCIyIjoi6auY44GE77ya5qWt5YuZ5YGc5q2i44CB6YeN5aSn44Gq44Ki44Kv44K744K56Zqc5a6z44CB44G+44Gf44Gv5b2T5pel5a++5b+c44GM5b+F6KaBIn0sInByb2JhYmlsaXRpZXMiOnsiMCI6MC4wMTYzLCIxIjowLjY4MjQsIjIiOjAuMzAxMn19LCJyZWZ1bmRfcmVxdWVzdCI6eyJ0eXBlIjoibm91bCIsImNvbmZpZGVuY2UiOjAuOTk5NywiYWN0aW9uIjp7ImFjdF9wcm9iYWJpbGl0eSI6MS4wfSwibm91bCI6MC4wMDAzfX0sInVzYWdlIjp7ImlucHV0X3Rva2VucyI6MjM4LCJvdXRwdXRfdG9rZW5zIjowfX0=",
+      "raw_response_sha256": "a139eb7ff24927fc7f5b1747a48fb839330a283de08a62afa1e7981ce65cc741"
+    },
+    {
+      "id": "a03",
+      "status": 200,
+      "latency_ms": 8.545,
+      "input_audit": {
+        "department": {
+          "instruction_tokens": 11,
+          "option_tokens_with_markers": 69,
+          "state_tokens": 15,
+          "input_tokens": 99
+        },
+        "urgency": {
+          "instruction_tokens": 12,
+          "option_tokens_with_markers": 51,
+          "state_tokens": 15,
+          "input_tokens": 82
+        },
+        "refund_request": {
+          "instruction_tokens": 14,
+          "option_tokens_with_markers": 18,
+          "state_tokens": 15,
+          "input_tokens": 51
+        }
+      },
+      "answers": {
+        "department": {
+          "type": "choice",
+          "confidence": 0.9871,
+          "action": {
+            "act_probability": 1.0
+          },
+          "choice": "account",
+          "probabilities": {
+            "billing": 0.0001,
+            "technical": 0.0014,
+            "account": 0.9977,
+            "sales": 0.0008
+          }
+        },
+        "urgency": {
+          "type": "score",
+          "confidence": 0.2699,
+          "action": {
+            "act_probability": 1.0
+          },
+          "score": 1.4561,
+          "legend": {
+            "0": "低い：急ぎではなく、数日待てる",
+            "1": "通常：数日以内の対応が望ましい",
+            "2": "高い：業務停止、重大なアクセス障害、または当日対応が必要"
+          },
+          "probabilities": {
+            "0": 0.0282,
+            "1": 0.4874,
+            "2": 0.4844
+          }
+        },
+        "refund_request": {
+          "type": "noul",
+          "confidence": 0.9999,
+          "action": {
+            "act_probability": 1.0
+          },
+          "noul": 0.0001
+        }
+      },
+      "usage": {
+        "input_tokens": 232,
+        "output_tokens": 0
+      },
+      "raw_response_text": "{\"model\":\"laya-rl-agent\",\"answers\":{\"department\":{\"type\":\"choice\",\"confidence\":0.9871,\"action\":{\"act_probability\":1.0},\"choice\":\"account\",\"probabilities\":{\"billing\":0.0001,\"technical\":0.0014,\"account\":0.9977,\"sales\":0.0008}},\"urgency\":{\"type\":\"score\",\"confidence\":0.2699,\"action\":{\"act_probability\":1.0},\"score\":1.4561,\"legend\":{\"0\":\"低い：急ぎではなく、数日待てる\",\"1\":\"通常：数日以内の対応が望ましい\",\"2\":\"高い：業務停止、重大なアクセス障害、または当日対応が必要\"},\"probabilities\":{\"0\":0.0282,\"1\":0.4874,\"2\":0.4844}},\"refund_request\":{\"type\":\"noul\",\"confidence\":0.9999,\"action\":{\"act_probability\":1.0},\"noul\":0.0001}},\"usage\":{\"input_tokens\":232,\"output_tokens\":0}}",
+      "raw_response_base64": "eyJtb2RlbCI6ImxheWEtcmwtYWdlbnQiLCJhbnN3ZXJzIjp7ImRlcGFydG1lbnQiOnsidHlwZSI6ImNob2ljZSIsImNvbmZpZGVuY2UiOjAuOTg3MSwiYWN0aW9uIjp7ImFjdF9wcm9iYWJpbGl0eSI6MS4wfSwiY2hvaWNlIjoiYWNjb3VudCIsInByb2JhYmlsaXRpZXMiOnsiYmlsbGluZyI6MC4wMDAxLCJ0ZWNobmljYWwiOjAuMDAxNCwiYWNjb3VudCI6MC45OTc3LCJzYWxlcyI6MC4wMDA4fX0sInVyZ2VuY3kiOnsidHlwZSI6InNjb3JlIiwiY29uZmlkZW5jZSI6MC4yNjk5LCJhY3Rpb24iOnsiYWN0X3Byb2JhYmlsaXR5IjoxLjB9LCJzY29yZSI6MS40NTYxLCJsZWdlbmQiOnsiMCI6IuS9juOBhO+8muaApeOBjuOBp+OBr+OBquOBj+OAgeaVsOaXpeW+heOBpuOCiyIsIjEiOiLpgJrluLjvvJrmlbDml6Xku6XlhoXjga7lr77lv5zjgYzmnJvjgb7jgZfjgYQiLCIyIjoi6auY44GE77ya5qWt5YuZ5YGc5q2i44CB6YeN5aSn44Gq44Ki44Kv44K744K56Zqc5a6z44CB44G+44Gf44Gv5b2T5pel5a++5b+c44GM5b+F6KaBIn0sInByb2JhYmlsaXRpZXMiOnsiMCI6MC4wMjgyLCIxIjowLjQ4NzQsIjIiOjAuNDg0NH19LCJyZWZ1bmRfcmVxdWVzdCI6eyJ0eXBlIjoibm91bCIsImNvbmZpZGVuY2UiOjAuOTk5OSwiYWN0aW9uIjp7ImFjdF9wcm9iYWJpbGl0eSI6MS4wfSwibm91bCI6MC4wMDAxfX0sInVzYWdlIjp7ImlucHV0X3Rva2VucyI6MjMyLCJvdXRwdXRfdG9rZW5zIjowfX0=",
+      "raw_response_sha256": "c579c4316efc428465904bd19693d29d83b3c928a1346275cead8f5437ac8031"
+    },
+    {
+      "id": "a04",
+      "status": 200,
+      "latency_ms": 8.151,
+      "input_audit": {
+        "department": {
+          "instruction_tokens": 11,
+          "option_tokens_with_markers": 69,
+          "state_tokens": 9,
+          "input_tokens": 93
+        },
+        "urgency": {
+          "instruction_tokens": 12,
+          "option_tokens_with_markers": 51,
+          "state_tokens": 9,
+          "input_tokens": 76
+        },
+        "refund_request": {
+          "instruction_tokens": 14,
+          "option_tokens_with_markers": 18,
+          "state_tokens": 9,
+          "input_tokens": 45
+        }
+      },
+      "answers": {
+        "department": {
+          "type": "choice",
+          "confidence": 0.8116,
+          "action": {
+            "act_probability": 1.0
+          },
+          "choice": "account",
+          "probabilities": {
+            "billing": 0.008,
+            "technical": 0.0407,
+            "account": 0.9436,
+            "sales": 0.0077
+          }
+        },
+        "urgency": {
+          "type": "score",
+          "confidence": 0.3547,
+          "action": {
+            "act_probability": 1.0
+          },
+          "score": 1.6064,
+          "legend": {
+            "0": "低い：急ぎではなく、数日待てる",
+            "1": "通常：数日以内の対応が望ましい",
+            "2": "高い：業務停止、重大なアクセス障害、または当日対応が必要"
+          },
+          "probabilities": {
+            "0": 0.009,
+            "1": 0.3756,
+            "2": 0.6154
+          }
+        },
+        "refund_request": {
+          "type": "noul",
+          "confidence": 0.9988,
+          "action": {
+            "act_probability": 1.0
+          },
+          "noul": 0.0012
+        }
+      },
+      "usage": {
+        "input_tokens": 214,
+        "output_tokens": 0
+      },
+      "raw_response_text": "{\"model\":\"laya-rl-agent\",\"answers\":{\"department\":{\"type\":\"choice\",\"confidence\":0.8116,\"action\":{\"act_probability\":1.0},\"choice\":\"account\",\"probabilities\":{\"billing\":0.008,\"technical\":0.0407,\"account\":0.9436,\"sales\":0.0077}},\"urgency\":{\"type\":\"score\",\"confidence\":0.3547,\"action\":{\"act_probability\":1.0},\"score\":1.6064,\"legend\":{\"0\":\"低い：急ぎではなく、数日待てる\",\"1\":\"通常：数日以内の対応が望ましい\",\"2\":\"高い：業務停止、重大なアクセス障害、または当日対応が必要\"},\"probabilities\":{\"0\":0.009,\"1\":0.3756,\"2\":0.6154}},\"refund_request\":{\"type\":\"noul\",\"confidence\":0.9988,\"action\":{\"act_probability\":1.0},\"noul\":0.0012}},\"usage\":{\"input_tokens\":214,\"output_tokens\":0}}",
+      "raw_response_base64": "eyJtb2RlbCI6ImxheWEtcmwtYWdlbnQiLCJhbnN3ZXJzIjp7ImRlcGFydG1lbnQiOnsidHlwZSI6ImNob2ljZSIsImNvbmZpZGVuY2UiOjAuODExNiwiYWN0aW9uIjp7ImFjdF9wcm9iYWJpbGl0eSI6MS4wfSwiY2hvaWNlIjoiYWNjb3VudCIsInByb2JhYmlsaXRpZXMiOnsiYmlsbGluZyI6MC4wMDgsInRlY2huaWNhbCI6MC4wNDA3LCJhY2NvdW50IjowLjk0MzYsInNhbGVzIjowLjAwNzd9fSwidXJnZW5jeSI6eyJ0eXBlIjoic2NvcmUiLCJjb25maWRlbmNlIjowLjM1NDcsImFjdGlvbiI6eyJhY3RfcHJvYmFiaWxpdHkiOjEuMH0sInNjb3JlIjoxLjYwNjQsImxlZ2VuZCI6eyIwIjoi5L2O44GE77ya5oCl44GO44Gn44Gv44Gq44GP44CB5pWw5pel5b6F44Gm44KLIiwiMSI6IumAmuW4uO+8muaVsOaXpeS7peWGheOBruWvvuW/nOOBjOacm+OBvuOBl+OBhCIsIjIiOiLpq5jjgYTvvJrmpa3li5nlgZzmraLjgIHph43lpKfjgarjgqLjgq/jgrvjgrnpmpzlrrPjgIHjgb7jgZ/jga/lvZPml6Xlr77lv5zjgYzlv4XopoEifSwicHJvYmFiaWxpdGllcyI6eyIwIjowLjAwOSwiMSI6MC4zNzU2LCIyIjowLjYxNTR9fSwicmVmdW5kX3JlcXVlc3QiOnsidHlwZSI6Im5vdWwiLCJjb25maWRlbmNlIjowLjk5ODgsImFjdGlvbiI6eyJhY3RfcHJvYmFiaWxpdHkiOjEuMH0sIm5vdWwiOjAuMDAxMn19LCJ1c2FnZSI6eyJpbnB1dF90b2tlbnMiOjIxNCwib3V0cHV0X3Rva2VucyI6MH19",
+      "raw_response_sha256": "fe388a258b8ac0e5e1ebc449503f3f3350e5908ac526cc9a6ddd6833c0c3c560"
+    },
+    {
+      "id": "a05",
+      "status": 200,
+      "latency_ms": 8.71,
+      "input_audit": {
+        "department": {
+          "instruction_tokens": 11,
+          "option_tokens_with_markers": 69,
+          "state_tokens": 19,
+          "input_tokens": 103
+        },
+        "urgency": {
+          "instruction_tokens": 12,
+          "option_tokens_with_markers": 51,
+          "state_tokens": 19,
+          "input_tokens": 86
+        },
+        "refund_request": {
+          "instruction_tokens": 14,
+          "option_tokens_with_markers": 18,
+          "state_tokens": 19,
+          "input_tokens": 55
+        }
+      },
+      "answers": {
+        "department": {
+          "type": "choice",
+          "confidence": 0.3397,
+          "action": {
+            "act_probability": 1.0
+          },
+          "choice": "account",
+          "probabilities": {
+            "billing": 0.4459,
+            "technical": 0.0583,
+            "account": 0.4876,
+            "sales": 0.0082
+          }
+        },
+        "urgency": {
+          "type": "score",
+          "confidence": 0.1721,
+          "action": {
+            "act_probability": 1.0
+          },
+          "score": 1.2589,
+          "legend": {
+            "0": "低い：急ぎではなく、数日待てる",
+            "1": "通常：数日以内の対応が望ましい",
+            "2": "高い：業務停止、重大なアクセス障害、または当日対応が必要"
+          },
+          "probabilities": {
+            "0": 0.0905,
+            "1": 0.5601,
+            "2": 0.3494
+          }
+        },
+        "refund_request": {
+          "type": "noul",
+          "confidence": 0.9883,
+          "action": {
+            "act_probability": 1.0
+          },
+          "noul": 0.0117
+        }
+      },
+      "usage": {
+        "input_tokens": 244,
+        "output_tokens": 0
+      },
+      "raw_response_text": "{\"model\":\"laya-rl-agent\",\"answers\":{\"department\":{\"type\":\"choice\",\"confidence\":0.3397,\"action\":{\"act_probability\":1.0},\"choice\":\"account\",\"probabilities\":{\"billing\":0.4459,\"technical\":0.0583,\"account\":0.4876,\"sales\":0.0082}},\"urgency\":{\"type\":\"score\",\"confidence\":0.1721,\"action\":{\"act_probability\":1.0},\"score\":1.2589,\"legend\":{\"0\":\"低い：急ぎではなく、数日待てる\",\"1\":\"通常：数日以内の対応が望ましい\",\"2\":\"高い：業務停止、重大なアクセス障害、または当日対応が必要\"},\"probabilities\":{\"0\":0.0905,\"1\":0.5601,\"2\":0.3494}},\"refund_request\":{\"type\":\"noul\",\"confidence\":0.9883,\"action\":{\"act_probability\":1.0},\"noul\":0.0117}},\"usage\":{\"input_tokens\":244,\"output_tokens\":0}}",
+      "raw_response_base64": "eyJtb2RlbCI6ImxheWEtcmwtYWdlbnQiLCJhbnN3ZXJzIjp7ImRlcGFydG1lbnQiOnsidHlwZSI6ImNob2ljZSIsImNvbmZpZGVuY2UiOjAuMzM5NywiYWN0aW9uIjp7ImFjdF9wcm9iYWJpbGl0eSI6MS4wfSwiY2hvaWNlIjoiYWNjb3VudCIsInByb2JhYmlsaXRpZXMiOnsiYmlsbGluZyI6MC40NDU5LCJ0ZWNobmljYWwiOjAuMDU4MywiYWNjb3VudCI6MC40ODc2LCJzYWxlcyI6MC4wMDgyfX0sInVyZ2VuY3kiOnsidHlwZSI6InNjb3JlIiwiY29uZmlkZW5jZSI6MC4xNzIxLCJhY3Rpb24iOnsiYWN0X3Byb2JhYmlsaXR5IjoxLjB9LCJzY29yZSI6MS4yNTg5LCJsZWdlbmQiOnsiMCI6IuS9juOBhO+8muaApeOBjuOBp+OBr+OBquOBj+OAgeaVsOaXpeW+heOBpuOCiyIsIjEiOiLpgJrluLjvvJrmlbDml6Xku6XlhoXjga7lr77lv5zjgYzmnJvjgb7jgZfjgYQiLCIyIjoi6auY44GE77ya5qWt5YuZ5YGc5q2i44CB6YeN5aSn44Gq44Ki44Kv44K744K56Zqc5a6z44CB44G+44Gf44Gv5b2T5pel5a++5b+c44GM5b+F6KaBIn0sInByb2JhYmlsaXRpZXMiOnsiMCI6MC4wOTA1LCIxIjowLjU2MDEsIjIiOjAuMzQ5NH19LCJyZWZ1bmRfcmVxdWVzdCI6eyJ0eXBlIjoibm91bCIsImNvbmZpZGVuY2UiOjAuOTg4MywiYWN0aW9uIjp7ImFjdF9wcm9iYWJpbGl0eSI6MS4wfSwibm91bCI6MC4wMTE3fX0sInVzYWdlIjp7ImlucHV0X3Rva2VucyI6MjQ0LCJvdXRwdXRfdG9rZW5zIjowfX0=",
+      "raw_response_sha256": "71cb4ad55e4471342a5175e4fe2450c78da12a0453ac44aba87d34c4057a26e7"
+    },
+    {
+      "id": "a06",
+      "status": 200,
+      "latency_ms": 8.327,
+      "input_audit": {
+        "department": {
+          "instruction_tokens": 11,
+          "option_tokens_with_markers": 69,
+          "state_tokens": 14,
+          "input_tokens": 98
+        },
+        "urgency": {
+          "instruction_tokens": 12,
+          "option_tokens_with_markers": 51,
+          "state_tokens": 14,
+          "input_tokens": 81
+        },
+        "refund_request": {
+          "instruction_tokens": 14,
+          "option_tokens_with_markers": 18,
+          "state_tokens": 14,
+          "input_tokens": 50
+        }
+      },
+      "answers": {
+        "department": {
+          "type": "choice",
+          "confidence": 0.9358,
+          "action": {
+            "act_probability": 1.0
+          },
+          "choice": "account",
+          "probabilities": {
+            "billing": 0.0029,
+            "technical": 0.001,
+            "account": 0.9849,
+            "sales": 0.0112
+          }
+        },
+        "urgency": {
+          "type": "score",
+          "confidence": 0.3418,
+          "action": {
+            "act_probability": 1.0
+          },
+          "score": 1.2897,
+          "legend": {
+            "0": "低い：急ぎではなく、数日待てる",
+            "1": "通常：数日以内の対応が望ましい",
+            "2": "高い：業務停止、重大なアクセス障害、または当日対応が必要"
+          },
+          "probabilities": {
+            "0": 0.0233,
+            "1": 0.6638,
+            "2": 0.3129
+          }
+        },
+        "refund_request": {
+          "type": "noul",
+          "confidence": 0.9999,
+          "action": {
+            "act_probability": 1.0
+          },
+          "noul": 0.0001
+        }
+      },
+      "usage": {
+        "input_tokens": 229,
+        "output_tokens": 0
+      },
+      "raw_response_text": "{\"model\":\"laya-rl-agent\",\"answers\":{\"department\":{\"type\":\"choice\",\"confidence\":0.9358,\"action\":{\"act_probability\":1.0},\"choice\":\"account\",\"probabilities\":{\"billing\":0.0029,\"technical\":0.001,\"account\":0.9849,\"sales\":0.0112}},\"urgency\":{\"type\":\"score\",\"confidence\":0.3418,\"action\":{\"act_probability\":1.0},\"score\":1.2897,\"legend\":{\"0\":\"低い：急ぎではなく、数日待てる\",\"1\":\"通常：数日以内の対応が望ましい\",\"2\":\"高い：業務停止、重大なアクセス障害、または当日対応が必要\"},\"probabilities\":{\"0\":0.0233,\"1\":0.6638,\"2\":0.3129}},\"refund_request\":{\"type\":\"noul\",\"confidence\":0.9999,\"action\":{\"act_probability\":1.0},\"noul\":0.0001}},\"usage\":{\"input_tokens\":229,\"output_tokens\":0}}",
+      "raw_response_base64": "eyJtb2RlbCI6ImxheWEtcmwtYWdlbnQiLCJhbnN3ZXJzIjp7ImRlcGFydG1lbnQiOnsidHlwZSI6ImNob2ljZSIsImNvbmZpZGVuY2UiOjAuOTM1OCwiYWN0aW9uIjp7ImFjdF9wcm9iYWJpbGl0eSI6MS4wfSwiY2hvaWNlIjoiYWNjb3VudCIsInByb2JhYmlsaXRpZXMiOnsiYmlsbGluZyI6MC4wMDI5LCJ0ZWNobmljYWwiOjAuMDAxLCJhY2NvdW50IjowLjk4NDksInNhbGVzIjowLjAxMTJ9fSwidXJnZW5jeSI6eyJ0eXBlIjoic2NvcmUiLCJjb25maWRlbmNlIjowLjM0MTgsImFjdGlvbiI6eyJhY3RfcHJvYmFiaWxpdHkiOjEuMH0sInNjb3JlIjoxLjI4OTcsImxlZ2VuZCI6eyIwIjoi5L2O44GE77ya5oCl44GO44Gn44Gv44Gq44GP44CB5pWw5pel5b6F44Gm44KLIiwiMSI6IumAmuW4uO+8muaVsOaXpeS7peWGheOBruWvvuW/nOOBjOacm+OBvuOBl+OBhCIsIjIiOiLpq5jjgYTvvJrmpa3li5nlgZzmraLjgIHph43lpKfjgarjgqLjgq/jgrvjgrnpmpzlrrPjgIHjgb7jgZ/jga/lvZPml6Xlr77lv5zjgYzlv4XopoEifSwicHJvYmFiaWxpdGllcyI6eyIwIjowLjAyMzMsIjEiOjAuNjYzOCwiMiI6MC4zMTI5fX0sInJlZnVuZF9yZXF1ZXN0Ijp7InR5cGUiOiJub3VsIiwiY29uZmlkZW5jZSI6MC45OTk5LCJhY3Rpb24iOnsiYWN0X3Byb2JhYmlsaXR5IjoxLjB9LCJub3VsIjowLjAwMDF9fSwidXNhZ2UiOnsiaW5wdXRfdG9rZW5zIjoyMjksIm91dHB1dF90b2tlbnMiOjB9fQ==",
+      "raw_response_sha256": "21a8d57f11c0af11ca26282867e58f8b4591cf96eab5167c5baf66b70c9a04f3"
+    },
+    {
+      "id": "s01",
+      "status": 200,
+      "latency_ms": 8.396,
+      "input_audit": {
+        "department": {
+          "instruction_tokens": 11,
+          "option_tokens_with_markers": 69,
+          "state_tokens": 15,
+          "input_tokens": 99
+        },
+        "urgency": {
+          "instruction_tokens": 12,
+          "option_tokens_with_markers": 51,
+          "state_tokens": 15,
+          "input_tokens": 82
+        },
+        "refund_request": {
+          "instruction_tokens": 14,
+          "option_tokens_with_markers": 18,
+          "state_tokens": 15,
+          "input_tokens": 51
+        }
+      },
+      "answers": {
+        "department": {
+          "type": "choice",
+          "confidence": 0.6588,
+          "action": {
+            "act_probability": 1.0
+          },
+          "choice": "billing",
+          "probabilities": {
+            "billing": 0.8798,
+            "technical": 0.0161,
+            "account": 0.0258,
+            "sales": 0.0783
+          }
+        },
+        "urgency": {
+          "type": "score",
+          "confidence": 0.3337,
+          "action": {
+            "act_probability": 1.0
+          },
+          "score": 1.3305,
+          "legend": {
+            "0": "低い：急ぎではなく、数日待てる",
+            "1": "通常：数日以内の対応が望ましい",
+            "2": "高い：業務停止、重大なアクセス障害、または当日対応が必要"
+          },
+          "probabilities": {
+            "0": 0.0188,
+            "1": 0.6319,
+            "2": 0.3493
+          }
+        },
+        "refund_request": {
+          "type": "noul",
+          "confidence": 0.9992,
+          "action": {
+            "act_probability": 1.0
+          },
+          "noul": 0.0008
+        }
+      },
+      "usage": {
+        "input_tokens": 232,
+        "output_tokens": 0
+      },
+      "raw_response_text": "{\"model\":\"laya-rl-agent\",\"answers\":{\"department\":{\"type\":\"choice\",\"confidence\":0.6588,\"action\":{\"act_probability\":1.0},\"choice\":\"billing\",\"probabilities\":{\"billing\":0.8798,\"technical\":0.0161,\"account\":0.0258,\"sales\":0.0783}},\"urgency\":{\"type\":\"score\",\"confidence\":0.3337,\"action\":{\"act_probability\":1.0},\"score\":1.3305,\"legend\":{\"0\":\"低い：急ぎではなく、数日待てる\",\"1\":\"通常：数日以内の対応が望ましい\",\"2\":\"高い：業務停止、重大なアクセス障害、または当日対応が必要\"},\"probabilities\":{\"0\":0.0188,\"1\":0.6319,\"2\":0.3493}},\"refund_request\":{\"type\":\"noul\",\"confidence\":0.9992,\"action\":{\"act_probability\":1.0},\"noul\":0.0008}},\"usage\":{\"input_tokens\":232,\"output_tokens\":0}}",
+      "raw_response_base64": "eyJtb2RlbCI6ImxheWEtcmwtYWdlbnQiLCJhbnN3ZXJzIjp7ImRlcGFydG1lbnQiOnsidHlwZSI6ImNob2ljZSIsImNvbmZpZGVuY2UiOjAuNjU4OCwiYWN0aW9uIjp7ImFjdF9wcm9iYWJpbGl0eSI6MS4wfSwiY2hvaWNlIjoiYmlsbGluZyIsInByb2JhYmlsaXRpZXMiOnsiYmlsbGluZyI6MC44Nzk4LCJ0ZWNobmljYWwiOjAuMDE2MSwiYWNjb3VudCI6MC4wMjU4LCJzYWxlcyI6MC4wNzgzfX0sInVyZ2VuY3kiOnsidHlwZSI6InNjb3JlIiwiY29uZmlkZW5jZSI6MC4zMzM3LCJhY3Rpb24iOnsiYWN0X3Byb2JhYmlsaXR5IjoxLjB9LCJzY29yZSI6MS4zMzA1LCJsZWdlbmQiOnsiMCI6IuS9juOBhO+8muaApeOBjuOBp+OBr+OBquOBj+OAgeaVsOaXpeW+heOBpuOCiyIsIjEiOiLpgJrluLjvvJrmlbDml6Xku6XlhoXjga7lr77lv5zjgYzmnJvjgb7jgZfjgYQiLCIyIjoi6auY44GE77ya5qWt5YuZ5YGc5q2i44CB6YeN5aSn44Gq44Ki44Kv44K744K56Zqc5a6z44CB44G+44Gf44Gv5b2T5pel5a++5b+c44GM5b+F6KaBIn0sInByb2JhYmlsaXRpZXMiOnsiMCI6MC4wMTg4LCIxIjowLjYzMTksIjIiOjAuMzQ5M319LCJyZWZ1bmRfcmVxdWVzdCI6eyJ0eXBlIjoibm91bCIsImNvbmZpZGVuY2UiOjAuOTk5MiwiYWN0aW9uIjp7ImFjdF9wcm9iYWJpbGl0eSI6MS4wfSwibm91bCI6MC4wMDA4fX0sInVzYWdlIjp7ImlucHV0X3Rva2VucyI6MjMyLCJvdXRwdXRfdG9rZW5zIjowfX0=",
+      "raw_response_sha256": "1ef2d9d5165f7825cc8c046c73daa5e57b65fea33e64c0621cc04fd824af7bb7"
+    },
+    {
+      "id": "s02",
+      "status": 200,
+      "latency_ms": 8.47,
+      "input_audit": {
+        "department": {
+          "instruction_tokens": 11,
+          "option_tokens_with_markers": 69,
+          "state_tokens": 17,
+          "input_tokens": 101
+        },
+        "urgency": {
+          "instruction_tokens": 12,
+          "option_tokens_with_markers": 51,
+          "state_tokens": 17,
+          "input_tokens": 84
+        },
+        "refund_request": {
+          "instruction_tokens": 14,
+          "option_tokens_with_markers": 18,
+          "state_tokens": 17,
+          "input_tokens": 53
+        }
+      },
+      "answers": {
+        "department": {
+          "type": "choice",
+          "confidence": 0.4724,
+          "action": {
+            "act_probability": 1.0
+          },
+          "choice": "sales",
+          "probabilities": {
+            "billing": 0.2248,
+            "technical": 0.0202,
+            "account": 0.0236,
+            "sales": 0.7314
+          }
+        },
+        "urgency": {
+          "type": "score",
+          "confidence": 0.293,
+          "action": {
+            "act_probability": 1.0
+          },
+          "score": 1.4033,
+          "legend": {
+            "0": "低い：急ぎではなく、数日待てる",
+            "1": "通常：数日以内の対応が望ましい",
+            "2": "高い：業務停止、重大なアクセス障害、または当日対応が必要"
+          },
+          "probabilities": {
+            "0": 0.0224,
+            "1": 0.5519,
+            "2": 0.4257
+          }
+        },
+        "refund_request": {
+          "type": "noul",
+          "confidence": 0.9985,
+          "action": {
+            "act_probability": 1.0
+          },
+          "noul": 0.0015
+        }
+      },
+      "usage": {
+        "input_tokens": 238,
+        "output_tokens": 0
+      },
+      "raw_response_text": "{\"model\":\"laya-rl-agent\",\"answers\":{\"department\":{\"type\":\"choice\",\"confidence\":0.4724,\"action\":{\"act_probability\":1.0},\"choice\":\"sales\",\"probabilities\":{\"billing\":0.2248,\"technical\":0.0202,\"account\":0.0236,\"sales\":0.7314}},\"urgency\":{\"type\":\"score\",\"confidence\":0.293,\"action\":{\"act_probability\":1.0},\"score\":1.4033,\"legend\":{\"0\":\"低い：急ぎではなく、数日待てる\",\"1\":\"通常：数日以内の対応が望ましい\",\"2\":\"高い：業務停止、重大なアクセス障害、または当日対応が必要\"},\"probabilities\":{\"0\":0.0224,\"1\":0.5519,\"2\":0.4257}},\"refund_request\":{\"type\":\"noul\",\"confidence\":0.9985,\"action\":{\"act_probability\":1.0},\"noul\":0.0015}},\"usage\":{\"input_tokens\":238,\"output_tokens\":0}}",
+      "raw_response_base64": "eyJtb2RlbCI6ImxheWEtcmwtYWdlbnQiLCJhbnN3ZXJzIjp7ImRlcGFydG1lbnQiOnsidHlwZSI6ImNob2ljZSIsImNvbmZpZGVuY2UiOjAuNDcyNCwiYWN0aW9uIjp7ImFjdF9wcm9iYWJpbGl0eSI6MS4wfSwiY2hvaWNlIjoic2FsZXMiLCJwcm9iYWJpbGl0aWVzIjp7ImJpbGxpbmciOjAuMjI0OCwidGVjaG5pY2FsIjowLjAyMDIsImFjY291bnQiOjAuMDIzNiwic2FsZXMiOjAuNzMxNH19LCJ1cmdlbmN5Ijp7InR5cGUiOiJzY29yZSIsImNvbmZpZGVuY2UiOjAuMjkzLCJhY3Rpb24iOnsiYWN0X3Byb2JhYmlsaXR5IjoxLjB9LCJzY29yZSI6MS40MDMzLCJsZWdlbmQiOnsiMCI6IuS9juOBhO+8muaApeOBjuOBp+OBr+OBquOBj+OAgeaVsOaXpeW+heOBpuOCiyIsIjEiOiLpgJrluLjvvJrmlbDml6Xku6XlhoXjga7lr77lv5zjgYzmnJvjgb7jgZfjgYQiLCIyIjoi6auY44GE77ya5qWt5YuZ5YGc5q2i44CB6YeN5aSn44Gq44Ki44Kv44K744K56Zqc5a6z44CB44G+44Gf44Gv5b2T5pel5a++5b+c44GM5b+F6KaBIn0sInByb2JhYmlsaXRpZXMiOnsiMCI6MC4wMjI0LCIxIjowLjU1MTksIjIiOjAuNDI1N319LCJyZWZ1bmRfcmVxdWVzdCI6eyJ0eXBlIjoibm91bCIsImNvbmZpZGVuY2UiOjAuOTk4NSwiYWN0aW9uIjp7ImFjdF9wcm9iYWJpbGl0eSI6MS4wfSwibm91bCI6MC4wMDE1fX0sInVzYWdlIjp7ImlucHV0X3Rva2VucyI6MjM4LCJvdXRwdXRfdG9rZW5zIjowfX0=",
+      "raw_response_sha256": "40d74776c5adb1a3ebffe79234ec1a74b60e2aa92f6c3d99436b2d4570d9020b"
+    },
+    {
+      "id": "s03",
+      "status": 200,
+      "latency_ms": 8.152,
+      "input_audit": {
+        "department": {
+          "instruction_tokens": 11,
+          "option_tokens_with_markers": 69,
+          "state_tokens": 10,
+          "input_tokens": 94
+        },
+        "urgency": {
+          "instruction_tokens": 12,
+          "option_tokens_with_markers": 51,
+          "state_tokens": 10,
+          "input_tokens": 77
+        },
+        "refund_request": {
+          "instruction_tokens": 14,
+          "option_tokens_with_markers": 18,
+          "state_tokens": 10,
+          "input_tokens": 46
+        }
+      },
+      "answers": {
+        "department": {
+          "type": "choice",
+          "confidence": 0.1847,
+          "action": {
+            "act_probability": 1.0
+          },
+          "choice": "billing",
+          "probabilities": {
+            "billing": 0.4753,
+            "technical": 0.0826,
+            "account": 0.0806,
+            "sales": 0.3616
+          }
+        },
+        "urgency": {
+          "type": "score",
+          "confidence": 0.2731,
+          "action": {
+            "act_probability": 1.0
+          },
+          "score": 1.4627,
+          "legend": {
+            "0": "低い：急ぎではなく、数日待てる",
+            "1": "通常：数日以内の対応が望ましい",
+            "2": "高い：業務停止、重大なアクセス障害、または当日対応が必要"
+          },
+          "probabilities": {
+            "0": 0.027,
+            "1": 0.4832,
+            "2": 0.4898
+          }
+        },
+        "refund_request": {
+          "type": "noul",
+          "confidence": 0.9878,
+          "action": {
+            "act_probability": 1.0
+          },
+          "noul": 0.0122
+        }
+      },
+      "usage": {
+        "input_tokens": 217,
+        "output_tokens": 0
+      },
+      "raw_response_text": "{\"model\":\"laya-rl-agent\",\"answers\":{\"department\":{\"type\":\"choice\",\"confidence\":0.1847,\"action\":{\"act_probability\":1.0},\"choice\":\"billing\",\"probabilities\":{\"billing\":0.4753,\"technical\":0.0826,\"account\":0.0806,\"sales\":0.3616}},\"urgency\":{\"type\":\"score\",\"confidence\":0.2731,\"action\":{\"act_probability\":1.0},\"score\":1.4627,\"legend\":{\"0\":\"低い：急ぎではなく、数日待てる\",\"1\":\"通常：数日以内の対応が望ましい\",\"2\":\"高い：業務停止、重大なアクセス障害、または当日対応が必要\"},\"probabilities\":{\"0\":0.027,\"1\":0.4832,\"2\":0.4898}},\"refund_request\":{\"type\":\"noul\",\"confidence\":0.9878,\"action\":{\"act_probability\":1.0},\"noul\":0.0122}},\"usage\":{\"input_tokens\":217,\"output_tokens\":0}}",
+      "raw_response_base64": "eyJtb2RlbCI6ImxheWEtcmwtYWdlbnQiLCJhbnN3ZXJzIjp7ImRlcGFydG1lbnQiOnsidHlwZSI6ImNob2ljZSIsImNvbmZpZGVuY2UiOjAuMTg0NywiYWN0aW9uIjp7ImFjdF9wcm9iYWJpbGl0eSI6MS4wfSwiY2hvaWNlIjoiYmlsbGluZyIsInByb2JhYmlsaXRpZXMiOnsiYmlsbGluZyI6MC40NzUzLCJ0ZWNobmljYWwiOjAuMDgyNiwiYWNjb3VudCI6MC4wODA2LCJzYWxlcyI6MC4zNjE2fX0sInVyZ2VuY3kiOnsidHlwZSI6InNjb3JlIiwiY29uZmlkZW5jZSI6MC4yNzMxLCJhY3Rpb24iOnsiYWN0X3Byb2JhYmlsaXR5IjoxLjB9LCJzY29yZSI6MS40NjI3LCJsZWdlbmQiOnsiMCI6IuS9juOBhO+8muaApeOBjuOBp+OBr+OBquOBj+OAgeaVsOaXpeW+heOBpuOCiyIsIjEiOiLpgJrluLjvvJrmlbDml6Xku6XlhoXjga7lr77lv5zjgYzmnJvjgb7jgZfjgYQiLCIyIjoi6auY44GE77ya5qWt5YuZ5YGc5q2i44CB6YeN5aSn44Gq44Ki44Kv44K744K56Zqc5a6z44CB44G+44Gf44Gv5b2T5pel5a++5b+c44GM5b+F6KaBIn0sInByb2JhYmlsaXRpZXMiOnsiMCI6MC4wMjcsIjEiOjAuNDgzMiwiMiI6MC40ODk4fX0sInJlZnVuZF9yZXF1ZXN0Ijp7InR5cGUiOiJub3VsIiwiY29uZmlkZW5jZSI6MC45ODc4LCJhY3Rpb24iOnsiYWN0X3Byb2JhYmlsaXR5IjoxLjB9LCJub3VsIjowLjAxMjJ9fSwidXNhZ2UiOnsiaW5wdXRfdG9rZW5zIjoyMTcsIm91dHB1dF90b2tlbnMiOjB9fQ==",
+      "raw_response_sha256": "45842d9fec576ea3f31b7b6d7d9946186ccbe2b07e1ce0a9a0b1fcc2fe4fd3f4"
+    },
+    {
+      "id": "s04",
+      "status": 200,
+      "latency_ms": 8.522,
+      "input_audit": {
+        "department": {
+          "instruction_tokens": 11,
+          "option_tokens_with_markers": 69,
+          "state_tokens": 17,
+          "input_tokens": 101
+        },
+        "urgency": {
+          "instruction_tokens": 12,
+          "option_tokens_with_markers": 51,
+          "state_tokens": 17,
+          "input_tokens": 84
+        },
+        "refund_request": {
+          "instruction_tokens": 14,
+          "option_tokens_with_markers": 18,
+          "state_tokens": 17,
+          "input_tokens": 53
+        }
+      },
+      "answers": {
+        "department": {
+          "type": "choice",
+          "confidence": 0.1343,
+          "action": {
+            "act_probability": 1.0
+          },
+          "choice": "sales",
+          "probabilities": {
+            "billing": 0.0744,
+            "technical": 0.2435,
+            "account": 0.1882,
+            "sales": 0.4939
+          }
+        },
+        "urgency": {
+          "type": "score",
+          "confidence": 0.2731,
+          "action": {
+            "act_probability": 1.0
+          },
+          "score": 1.3996,
+          "legend": {
+            "0": "低い：急ぎではなく、数日待てる",
+            "1": "通常：数日以内の対応が望ましい",
+            "2": "高い：業務停止、重大なアクセス障害、または当日対応が必要"
+          },
+          "probabilities": {
+            "0": 0.0293,
+            "1": 0.5417,
+            "2": 0.429
+          }
+        },
+        "refund_request": {
+          "type": "noul",
+          "confidence": 0.9958,
+          "action": {
+            "act_probability": 1.0
+          },
+          "noul": 0.0042
+        }
+      },
+      "usage": {
+        "input_tokens": 238,
+        "output_tokens": 0
+      },
+      "raw_response_text": "{\"model\":\"laya-rl-agent\",\"answers\":{\"department\":{\"type\":\"choice\",\"confidence\":0.1343,\"action\":{\"act_probability\":1.0},\"choice\":\"sales\",\"probabilities\":{\"billing\":0.0744,\"technical\":0.2435,\"account\":0.1882,\"sales\":0.4939}},\"urgency\":{\"type\":\"score\",\"confidence\":0.2731,\"action\":{\"act_probability\":1.0},\"score\":1.3996,\"legend\":{\"0\":\"低い：急ぎではなく、数日待てる\",\"1\":\"通常：数日以内の対応が望ましい\",\"2\":\"高い：業務停止、重大なアクセス障害、または当日対応が必要\"},\"probabilities\":{\"0\":0.0293,\"1\":0.5417,\"2\":0.429}},\"refund_request\":{\"type\":\"noul\",\"confidence\":0.9958,\"action\":{\"act_probability\":1.0},\"noul\":0.0042}},\"usage\":{\"input_tokens\":238,\"output_tokens\":0}}",
+      "raw_response_base64": "eyJtb2RlbCI6ImxheWEtcmwtYWdlbnQiLCJhbnN3ZXJzIjp7ImRlcGFydG1lbnQiOnsidHlwZSI6ImNob2ljZSIsImNvbmZpZGVuY2UiOjAuMTM0MywiYWN0aW9uIjp7ImFjdF9wcm9iYWJpbGl0eSI6MS4wfSwiY2hvaWNlIjoic2FsZXMiLCJwcm9iYWJpbGl0aWVzIjp7ImJpbGxpbmciOjAuMDc0NCwidGVjaG5pY2FsIjowLjI0MzUsImFjY291bnQiOjAuMTg4Miwic2FsZXMiOjAuNDkzOX19LCJ1cmdlbmN5Ijp7InR5cGUiOiJzY29yZSIsImNvbmZpZGVuY2UiOjAuMjczMSwiYWN0aW9uIjp7ImFjdF9wcm9iYWJpbGl0eSI6MS4wfSwic2NvcmUiOjEuMzk5NiwibGVnZW5kIjp7IjAiOiLkvY7jgYTvvJrmgKXjgY7jgafjga/jgarjgY/jgIHmlbDml6XlvoXjgabjgosiLCIxIjoi6YCa5bi477ya5pWw5pel5Lul5YaF44Gu5a++5b+c44GM5pyb44G+44GX44GEIiwiMiI6IumrmOOBhO+8mualreWLmeWBnOatouOAgemHjeWkp+OBquOCouOCr+OCu+OCuemanOWus+OAgeOBvuOBn+OBr+W9k+aXpeWvvuW/nOOBjOW/heimgSJ9LCJwcm9iYWJpbGl0aWVzIjp7IjAiOjAuMDI5MywiMSI6MC41NDE3LCIyIjowLjQyOX19LCJyZWZ1bmRfcmVxdWVzdCI6eyJ0eXBlIjoibm91bCIsImNvbmZpZGVuY2UiOjAuOTk1OCwiYWN0aW9uIjp7ImFjdF9wcm9iYWJpbGl0eSI6MS4wfSwibm91bCI6MC4wMDQyfX0sInVzYWdlIjp7ImlucHV0X3Rva2VucyI6MjM4LCJvdXRwdXRfdG9rZW5zIjowfX0=",
+      "raw_response_sha256": "3ecb17f406875fd37c0092091ec4ca80dd51b7a3a83d47832ece0d9ff88afadc"
+    },
+    {
+      "id": "s05",
+      "status": 200,
+      "latency_ms": 8.508,
+      "input_audit": {
+        "department": {
+          "instruction_tokens": 11,
+          "option_tokens_with_markers": 69,
+          "state_tokens": 18,
+          "input_tokens": 102
+        },
+        "urgency": {
+          "instruction_tokens": 12,
+          "option_tokens_with_markers": 51,
+          "state_tokens": 18,
+          "input_tokens": 85
+        },
+        "refund_request": {
+          "instruction_tokens": 14,
+          "option_tokens_with_markers": 18,
+          "state_tokens": 18,
+          "input_tokens": 54
+        }
+      },
+      "answers": {
+        "department": {
+          "type": "choice",
+          "confidence": 0.4227,
+          "action": {
+            "act_probability": 1.0
+          },
+          "choice": "sales",
+          "probabilities": {
+            "billing": 0.2849,
+            "technical": 0.0386,
+            "account": 0.0101,
+            "sales": 0.6664
+          }
+        },
+        "urgency": {
+          "type": "score",
+          "confidence": 0.3357,
+          "action": {
+            "act_probability": 1.0
+          },
+          "score": 1.4424,
+          "legend": {
+            "0": "低い：急ぎではなく、数日待てる",
+            "1": "通常：数日以内の対応が望ましい",
+            "2": "高い：業務停止、重大なアクセス障害、または当日対応が必要"
+          },
+          "probabilities": {
+            "0": 0.008,
+            "1": 0.5417,
+            "2": 0.4503
+          }
+        },
+        "refund_request": {
+          "type": "noul",
+          "confidence": 0.9997,
+          "action": {
+            "act_probability": 1.0
+          },
+          "noul": 0.0003
+        }
+      },
+      "usage": {
+        "input_tokens": 241,
+        "output_tokens": 0
+      },
+      "raw_response_text": "{\"model\":\"laya-rl-agent\",\"answers\":{\"department\":{\"type\":\"choice\",\"confidence\":0.4227,\"action\":{\"act_probability\":1.0},\"choice\":\"sales\",\"probabilities\":{\"billing\":0.2849,\"technical\":0.0386,\"account\":0.0101,\"sales\":0.6664}},\"urgency\":{\"type\":\"score\",\"confidence\":0.3357,\"action\":{\"act_probability\":1.0},\"score\":1.4424,\"legend\":{\"0\":\"低い：急ぎではなく、数日待てる\",\"1\":\"通常：数日以内の対応が望ましい\",\"2\":\"高い：業務停止、重大なアクセス障害、または当日対応が必要\"},\"probabilities\":{\"0\":0.008,\"1\":0.5417,\"2\":0.4503}},\"refund_request\":{\"type\":\"noul\",\"confidence\":0.9997,\"action\":{\"act_probability\":1.0},\"noul\":0.0003}},\"usage\":{\"input_tokens\":241,\"output_tokens\":0}}",
+      "raw_response_base64": "eyJtb2RlbCI6ImxheWEtcmwtYWdlbnQiLCJhbnN3ZXJzIjp7ImRlcGFydG1lbnQiOnsidHlwZSI6ImNob2ljZSIsImNvbmZpZGVuY2UiOjAuNDIyNywiYWN0aW9uIjp7ImFjdF9wcm9iYWJpbGl0eSI6MS4wfSwiY2hvaWNlIjoic2FsZXMiLCJwcm9iYWJpbGl0aWVzIjp7ImJpbGxpbmciOjAuMjg0OSwidGVjaG5pY2FsIjowLjAzODYsImFjY291bnQiOjAuMDEwMSwic2FsZXMiOjAuNjY2NH19LCJ1cmdlbmN5Ijp7InR5cGUiOiJzY29yZSIsImNvbmZpZGVuY2UiOjAuMzM1NywiYWN0aW9uIjp7ImFjdF9wcm9iYWJpbGl0eSI6MS4wfSwic2NvcmUiOjEuNDQyNCwibGVnZW5kIjp7IjAiOiLkvY7jgYTvvJrmgKXjgY7jgafjga/jgarjgY/jgIHmlbDml6XlvoXjgabjgosiLCIxIjoi6YCa5bi477ya5pWw5pel5Lul5YaF44Gu5a++5b+c44GM5pyb44G+44GX44GEIiwiMiI6IumrmOOBhO+8mualreWLmeWBnOatouOAgemHjeWkp+OBquOCouOCr+OCu+OCuemanOWus+OAgeOBvuOBn+OBr+W9k+aXpeWvvuW/nOOBjOW/heimgSJ9LCJwcm9iYWJpbGl0aWVzIjp7IjAiOjAuMDA4LCIxIjowLjU0MTcsIjIiOjAuNDUwM319LCJyZWZ1bmRfcmVxdWVzdCI6eyJ0eXBlIjoibm91bCIsImNvbmZpZGVuY2UiOjAuOTk5NywiYWN0aW9uIjp7ImFjdF9wcm9iYWJpbGl0eSI6MS4wfSwibm91bCI6MC4wMDAzfX0sInVzYWdlIjp7ImlucHV0X3Rva2VucyI6MjQxLCJvdXRwdXRfdG9rZW5zIjowfX0=",
+      "raw_response_sha256": "ff40534012fa2728f616f2c386adac3c9e7d1710d3913043e094df229e91d0d9"
+    },
+    {
+      "id": "s06",
+      "status": 200,
+      "latency_ms": 8.59,
+      "input_audit": {
+        "department": {
+          "instruction_tokens": 11,
+          "option_tokens_with_markers": 69,
+          "state_tokens": 16,
+          "input_tokens": 100
+        },
+        "urgency": {
+          "instruction_tokens": 12,
+          "option_tokens_with_markers": 51,
+          "state_tokens": 16,
+          "input_tokens": 83
+        },
+        "refund_request": {
+          "instruction_tokens": 14,
+          "option_tokens_with_markers": 18,
+          "state_tokens": 16,
+          "input_tokens": 52
+        }
+      },
+      "answers": {
+        "department": {
+          "type": "choice",
+          "confidence": 0.5,
+          "action": {
+            "act_probability": 1.0
+          },
+          "choice": "sales",
+          "probabilities": {
+            "billing": 0.3486,
+            "technical": 0.0023,
+            "account": 0.0055,
+            "sales": 0.6437
+          }
+        },
+        "urgency": {
+          "type": "score",
+          "confidence": 0.3581,
+          "action": {
+            "act_probability": 1.0
+          },
+          "score": 1.33,
+          "legend": {
+            "0": "低い：急ぎではなく、数日待てる",
+            "1": "通常：数日以内の対応が望ましい",
+            "2": "高い：業務停止、重大なアクセス障害、または当日対応が必要"
+          },
+          "probabilities": {
+            "0": 0.0126,
+            "1": 0.6447,
+            "2": 0.3427
+          }
+        },
+        "refund_request": {
+          "type": "noul",
+          "confidence": 0.9995,
+          "action": {
+            "act_probability": 1.0
+          },
+          "noul": 0.0005
+        }
+      },
+      "usage": {
+        "input_tokens": 235,
+        "output_tokens": 0
+      },
+      "raw_response_text": "{\"model\":\"laya-rl-agent\",\"answers\":{\"department\":{\"type\":\"choice\",\"confidence\":0.5,\"action\":{\"act_probability\":1.0},\"choice\":\"sales\",\"probabilities\":{\"billing\":0.3486,\"technical\":0.0023,\"account\":0.0055,\"sales\":0.6437}},\"urgency\":{\"type\":\"score\",\"confidence\":0.3581,\"action\":{\"act_probability\":1.0},\"score\":1.33,\"legend\":{\"0\":\"低い：急ぎではなく、数日待てる\",\"1\":\"通常：数日以内の対応が望ましい\",\"2\":\"高い：業務停止、重大なアクセス障害、または当日対応が必要\"},\"probabilities\":{\"0\":0.0126,\"1\":0.6447,\"2\":0.3427}},\"refund_request\":{\"type\":\"noul\",\"confidence\":0.9995,\"action\":{\"act_probability\":1.0},\"noul\":0.0005}},\"usage\":{\"input_tokens\":235,\"output_tokens\":0}}",
+      "raw_response_base64": "eyJtb2RlbCI6ImxheWEtcmwtYWdlbnQiLCJhbnN3ZXJzIjp7ImRlcGFydG1lbnQiOnsidHlwZSI6ImNob2ljZSIsImNvbmZpZGVuY2UiOjAuNSwiYWN0aW9uIjp7ImFjdF9wcm9iYWJpbGl0eSI6MS4wfSwiY2hvaWNlIjoic2FsZXMiLCJwcm9iYWJpbGl0aWVzIjp7ImJpbGxpbmciOjAuMzQ4NiwidGVjaG5pY2FsIjowLjAwMjMsImFjY291bnQiOjAuMDA1NSwic2FsZXMiOjAuNjQzN319LCJ1cmdlbmN5Ijp7InR5cGUiOiJzY29yZSIsImNvbmZpZGVuY2UiOjAuMzU4MSwiYWN0aW9uIjp7ImFjdF9wcm9iYWJpbGl0eSI6MS4wfSwic2NvcmUiOjEuMzMsImxlZ2VuZCI6eyIwIjoi5L2O44GE77ya5oCl44GO44Gn44Gv44Gq44GP44CB5pWw5pel5b6F44Gm44KLIiwiMSI6IumAmuW4uO+8muaVsOaXpeS7peWGheOBruWvvuW/nOOBjOacm+OBvuOBl+OBhCIsIjIiOiLpq5jjgYTvvJrmpa3li5nlgZzmraLjgIHph43lpKfjgarjgqLjgq/jgrvjgrnpmpzlrrPjgIHjgb7jgZ/jga/lvZPml6Xlr77lv5zjgYzlv4XopoEifSwicHJvYmFiaWxpdGllcyI6eyIwIjowLjAxMjYsIjEiOjAuNjQ0NywiMiI6MC4zNDI3fX0sInJlZnVuZF9yZXF1ZXN0Ijp7InR5cGUiOiJub3VsIiwiY29uZmlkZW5jZSI6MC45OTk1LCJhY3Rpb24iOnsiYWN0X3Byb2JhYmlsaXR5IjoxLjB9LCJub3VsIjowLjAwMDV9fSwidXNhZ2UiOnsiaW5wdXRfdG9rZW5zIjoyMzUsIm91dHB1dF90b2tlbnMiOjB9fQ==",
+      "raw_response_sha256": "1f425490841511acf5661c937f26d1e90b81143e3d5f742dc847428b51253269"
+    }
+  ]
+}

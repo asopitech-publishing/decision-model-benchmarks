@@ -11,13 +11,15 @@ Strands Decider 2B、Clef-flash、laya、Jevを同じ設問形式で比較する
 - [`RESULTS.md`](RESULTS.md) — 2026年10月6日の品質・並列性能の集計と評価上の注意点。
 - [`BATCH_RESULTS.md`](BATCH_RESULTS.md) — 10月7日に各ローカルモデルを1インスタンスで動かしたバッチ推論・HTTP同時要求の測定。
 - [`REPLICA_RESULTS.md`](REPLICA_RESULTS.md) — 同じMacで各モデルを1・2・4プロセス常駐させたときのHTTP応答時間。
+- [`PRECISION_RESULTS.md`](PRECISION_RESULTS.md) — 元のlaya multilingual FP16と、そのq8変換版を同一条件で比較。Kiro20問・サポート72判定の生結果も収録。
 - [`results/2026-10-06/`](results/2026-10-06/) — 同日の公開用生結果12ファイル。HTTP応答本文、usage、各リクエストの計測値を収録。
-- [`results/2026-10-07/`](results/2026-10-07/) — バッチ推論と複数インスタンス試験の公開用生結果9ファイル。
+- [`results/2026-10-07/`](results/2026-10-07/) — バッチ推論・複数インスタンス・FP16/q8精度比較の公開用生結果13ファイル。
 - `benchmarks/export_public_results.py` — 元の測定結果から公開用ファイルを作り、応答本文のハッシュと機密情報を検査。
 - `benchmarks/bench_model_batch.py`、`benchmarks/*_batch.py` — 独立した要求を、各モデル1インスタンスで実際に1回の推論へまとめる測定。
 - `benchmarks/batch_server.py` — 受付キューと2 msの待機窓を持つ、1モデル・1推論ワーカーのHTTPサーバー。`X-Inference-Batch-Size`で実バッチサイズを返します。
 - `benchmarks/export_batch_results.py` — 10月7日の6ファイルを公開用に検査・出力。
 - `benchmarks/audit_strands_versions.py` — 保存済みのStrands v19/v21応答について、版・要求ハッシュ・応答ハッシュ・判定を再検証。
+- `benchmarks/compare_laya_precisions.py`、`benchmarks/audit_laya_precisions.py` — FP16/q8を`head_max_len=512`で直接測定し、全文入力・重みの識別・生応答・採点を監査。
 - `benchmarks/bench_replicas.py`、`benchmarks/export_replica_results.py` — ローカルモデルを別プロセスで1・2・4個動かし、応答時間を測定・公開用に監査。
 
 ## 準備
