@@ -1,6 +1,8 @@
 # Decision Model Benchmarks
 
-Strands Decider 2B、Clef-flash、laya、Jevを同じ設問形式で比較するベンチマークコードです。日本語20問のルーティング評価と、24件×3設問の問い合わせ分類を収録しています。記事本文は別の非公開リポジトリ [`substack-manuscripts`](https://github.com/asopitech-publishing/substack-manuscripts) で管理します。
+Strands Decider 2B、Clef-flash、Jevの判定品質を比較するベンチマークコードです。日本語20問のルーティング評価と、24件×3設問の問い合わせ分類を収録しています。layaの測定コードと生結果は再現用の記録として残し、現在のモデル比較から外しています。記事本文は別の非公開リポジトリ [`substack-manuscripts`](https://github.com/asopitech-publishing/substack-manuscripts) で管理します。
+
+10月7日のバッチ試験は短文24件だけを使い、長い入力や長短混合を測っていません。公開済みの生データは保持しますが、件数/秒の順位やバッチ数の推奨には使いません。[試験範囲と撤回した解釈](BATCH_RESULTS.md)を先に確認してください。
 
 ## 内容
 
@@ -9,11 +11,11 @@ Strands Decider 2B、Clef-flash、laya、Jevを同じ設問形式で比較する
 - `benchmarks/kiro_article_cases.json` — [クラスメソッドの検証記事](https://dev.classmethod.jp/articles/strands-decider-2b-m4-mac-kiro-crew/)の日本語20問と、共通の`B_desc`判定文。`prepare_kiro_article.py`で元記事から再生成できます。
 - `benchmarks/clef_vs_laya_cases.json` — 今回作成した日本語サポート問い合わせ24件、担当部署・緊急度・返金要求の3設問。
 - [`RESULTS.md`](RESULTS.md) — 2026年10月6日の品質・並列性能の集計と評価上の注意点。
-- [`BATCH_RESULTS.md`](BATCH_RESULTS.md) — 10月7日に各ローカルモデルを1インスタンスで動かしたバッチ推論・HTTP同時要求の測定。
-- [`REPLICA_RESULTS.md`](REPLICA_RESULTS.md) — 同じMacで各モデルを1・2・4プロセス常駐させたときのHTTP応答時間。
-- [`PRECISION_RESULTS.md`](PRECISION_RESULTS.md) — 元のlaya multilingual FP16とq8を、品質・モデル内バッチ・HTTP実バッチ・1/2/4インスタンスで同条件比較。
+- [`BATCH_RESULTS.md`](BATCH_RESULTS.md) — 短文バッチ試験で確認できた範囲と、性能比較から外した理由。
+- [`REPLICA_RESULTS.md`](REPLICA_RESULTS.md) — StrandsとClefを1・2・4プロセス常駐させた短文負荷のHTTP応答記録。
+- [`PRECISION_RESULTS.md`](PRECISION_RESULTS.md) — laya FP16/q8の判定記録と、性能試験の生結果の保存先。
 - [`results/2026-10-06/`](results/2026-10-06/) — 同日の公開用生結果12ファイル。HTTP応答本文、usage、各リクエストの計測値を収録。
-- [`results/2026-10-07/`](results/2026-10-07/) — バッチ推論・複数インスタンス・FP16/q8比較の公開用生結果19ファイル。
+- [`results/2026-10-07/`](results/2026-10-07/) — バッチ推論・複数インスタンス・FP16/q8比較の公開用生結果JSON19ファイルと適用範囲の説明。
 - `benchmarks/export_public_results.py` — 元の測定結果から公開用ファイルを作り、応答本文のハッシュと機密情報を検査。
 - `benchmarks/bench_model_batch.py`、`benchmarks/*_batch.py` — 独立した要求を、各モデル1インスタンスで実際に1回の推論へまとめる測定。
 - `benchmarks/batch_server.py` — 受付キューと2 msの待機窓を持つ、1モデル・1推論ワーカーのHTTPサーバー。`X-Inference-Batch-Size`で実バッチサイズを返します。
@@ -70,88 +72,30 @@ python benchmarks/audit_strands_versions.py
 
 `--model`を`clef`、`laya`、`jev`に変えると同じ設問を送れます。Strandsの既定はv21で、v19を使うときはクライアントの`--strands-version v19`とサーバーのモデル指定を揃えます。既存結果へ並列測定を追記する際も版の一致を確認します。MPSを測る場合はStrandsサーバーを`--device mps`で起動し、別の結果ファイルを指定します。測定前のローカルモデル用ウォームアップを省く場合は`--no-warmup`を付けます。
 
-## laya FP16・q8を同じ条件で比較する
+## layaの保存済み記録
 
-両精度とも`--laya-head-max-len 512`を指定します。モデルディレクトリの設定ファイルは変更しません。以下はFP16の例です。q8ではモデルのディレクトリをq8版に替え、`float16`を`int8_mixed`、`fp16`を`q8`に替えます。両精度のKiro・サポート品質は`compare_laya_precisions.py`で測ります。
-
-```bash
-PYTHONPATH="benchmarks:path/to/laya-mlx" python benchmarks/bench_model_batch.py \
-  --model-kind laya --model path/to/laya-multilingual \
-  --laya-dtype float16 --laya-head-max-len 512 \
-  --fixture benchmarks/clef_vs_laya_cases.json --out results/laya-fp16-batch.json
-
-python benchmarks/bench_replicas.py --model-kind laya \
-  --python path/to/laya-env/bin/python --source path/to/laya-mlx \
-  --model path/to/laya-multilingual --laya-dtype float16 --laya-head-max-len 512 \
-  --fixture benchmarks/clef_vs_laya_cases.json \
-  --out results/laya-fp16-replicas.json --port-base 8150
-
-# 別ターミナルで起動したFP16のバッチサーバーに送る
-PYTHONPATH="benchmarks:path/to/laya-mlx" python benchmarks/batch_server.py \
-  --model-kind laya --model path/to/laya-multilingual \
-  --laya-dtype float16 --laya-head-max-len 512 \
-  --port 8014 --batch-requests 8 --batch-wait-ms 2
-
-python benchmarks/compare_four.py --model laya --laya-precision fp16 \
-  --expect-laya-head-max-len 512 --fixture benchmarks/clef_vs_laya_cases.json \
-  --out results/laya-fp16-http-batch.json --parallel 2 4 8
-```
-
-`compare_four.py`は送信前にサーバーのdtype・`head_max_len`・モデル常駐数を照合します。生結果を公開用に変換した6ファイルは[`PRECISION_RESULTS.md`](PRECISION_RESULTS.md)から辿れます。
+FP16とq8の判定差、重みの識別、公開済みの生結果は[判定記録](PRECISION_RESULTS.md)にあります。短文バッチ性能の再測定は実施しません。
 
 ## 複数インスタンスでの応答時間を測る
 
 同じMacにモデルを1・2・4プロセス常駐させ、同時数1・2・4・8のHTTP要求を各3回測ります。プロセスごとの推論バッチは1件に固定します。測定プログラムが起動と終了を管理し、ループバック上の各プロセスへ要求を振り分けます。Jevには送信しません。
 
 ```bash
-python benchmarks/bench_replicas.py --model-kind laya \
-  --python path/to/laya-env/bin/python \
-  --source path/to/laya-mlx \
-  --model path/to/laya-multilingual-q8 \
+python benchmarks/bench_replicas.py --model-kind strands \
+  --python path/to/strands-env/bin/python \
+  --source path/to/strands-decider/src \
+  --model StrandsAgents/strands-decider-2B-hobson-v21 \
   --fixture benchmarks/clef_vs_laya_cases.json \
-  --out results/laya-replicas.json --port-base 8120
+  --out results/strands-replicas.json --port-base 8120
 ```
 
 Strandsでは`--model-kind strands`とMLX依存を導入したPython、`--source`に`strands-decider/src`、`--model`にローカルキャッシュ済みの`StrandsAgents/strands-decider-2B-hobson-v21`を使います。必要なら`HF_HOME`をそのキャッシュに向けてください。Clefでは`--model-kind clef`とMLX用Python、`--source`に`clef_mlx.py`のあるディレクトリ、`--model`に4bitモデルのローカルディレクトリを使います。測定はオフラインで実行し、結果ファイルの上書きを拒否します。`--python`には仮想環境の`bin/python`を指定してください。
 
 結果には各要求の応答本文、p50・p95、処理量、振り分け先インスタンス番号、実推論バッチサイズを残します。元結果から公開用の3ファイルを作るときは`python benchmarks/export_replica_results.py results results/2026-10-07`を実行します。元結果にはローカルの応答ヘッダーも残り、公開用では取り除かれます。
 
-## 単一モデル内のバッチ推論を測る
+## バッチ試験のアーカイブ
 
-10月7日の試験では、サーバーの同時受付とモデルの推論バッチを分けて測りました。各モデルに対応するPython環境で以下を実行します。`path/to/...`は自分の環境のソースとモデルの位置へ置き換えてください。Jev APIは使いません。
-
-```bash
-# laya-mlxのパッケージが読み込める環境
-PYTHONPATH="benchmarks:path/to/laya-mlx" python benchmarks/bench_model_batch.py \
-  --model-kind laya --model path/to/laya-multilingual-q8 \
-  --fixture benchmarks/clef_vs_laya_cases.json --out results/laya-batch.json
-
-# StrandsのMLX追加依存を導入済みの環境
-PYTHONPATH=benchmarks python benchmarks/bench_model_batch.py \
-  --model-kind strands --model StrandsAgents/strands-decider-2B-hobson-v21 \
-  --fixture benchmarks/clef_vs_laya_cases.json --out results/strands-batch.json
-
-# ClefのMLX移植版が読み込める環境
-PYTHONPATH="benchmarks:path/to/clef-mlx" python benchmarks/bench_model_batch.py \
-  --model-kind clef --model mlx-community/clef-flash-4bit \
-  --fixture benchmarks/clef_vs_laya_cases.json --out results/clef-batch.json
-```
-
-既定でバッチ件数1・2・4・8を各5回測ります。各バッチ形状をローカルで1周してから計測し、プロンプトキャッシュは無効にします。出力には逐次基準の回答、各試行の全回答、判定の一致、確率差、推論時間、Metalメモリを保存します。
-
-HTTP経由の同時要求は、元のサーバーの代わりに以下のバッチサーバーを別ターミナルで起動して測ります。例はlaya用です。StrandsとClefも`--model-kind`、モデルID、ポートを変えます。各プロセスが保持するモデルは1個です。
-
-```bash
-PYTHONPATH="benchmarks:path/to/laya-mlx" python benchmarks/batch_server.py \
-  --model-kind laya --model path/to/laya-multilingual-q8 \
-  --port 8014 --batch-requests 8 --batch-wait-ms 2
-
-python benchmarks/compare_four.py --model laya \
-  --fixture benchmarks/clef_vs_laya_cases.json \
-  --out results/laya-http-batch.json --parallel 2 4 8
-```
-
-サーバーはループバックのみに公開し、既定では1要求当たり最大3問を受け付けます。設問数が違う場合は`--max-questions-per-request`を指定してください。各HTTP応答の`inference_batch_size`を確認すれば、同時要求が実際に何件の推論バッチになったか分かります。
+`benchmarks/bench_model_batch.py`と`benchmarks/batch_server.py`は公開済みの生結果を再現するために残しています。短文24件の試験からモデル間のバッチ性能や実運用のバッチ数を評価しない方針です。[結果の読み方](BATCH_RESULTS.md)を確認してください。
 
 通常の測定出力にはHTTPの生レスポンスが含まれ、モード600で保存されます。`results/`は原則Git管理対象外で、監査済みの公開用ファイルだけを例外として収録します。元の測定データに含まれていたPCの絶対パスを相対パスに置き換え、応答ヘッダーを除いています。HTTP応答本文はBase64で全件保持し、SHA-256で照合しています。記事の集計と照合するときは、同一の設問、モデル版、実行環境、サーバー設定を記録してください。
 
