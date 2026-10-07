@@ -29,7 +29,8 @@ def decision(answer):
         return answer["choice"]
     if kind == "noul":
         return answer["noul"] >= 0.5
-    return round(answer["score"])
+    probabilities = answer["probabilities"]
+    return max(probabilities, key=probabilities.get)
 
 
 def deltas(reference, actual):

@@ -17,6 +17,7 @@ Strands Decider 2B、Clef-flash、laya、Jevを同じ設問形式で比較する
 - `benchmarks/bench_model_batch.py`、`benchmarks/*_batch.py` — 独立した要求を、各モデル1インスタンスで実際に1回の推論へまとめる測定。
 - `benchmarks/batch_server.py` — 受付キューと2 msの待機窓を持つ、1モデル・1推論ワーカーのHTTPサーバー。`X-Inference-Batch-Size`で実バッチサイズを返します。
 - `benchmarks/export_batch_results.py` — 10月7日の6ファイルを公開用に検査・出力。
+- `benchmarks/audit_strands_versions.py` — 保存済みのStrands v19/v21応答について、版・要求ハッシュ・応答ハッシュ・判定を再検証。
 - `benchmarks/bench_replicas.py`、`benchmarks/export_replica_results.py` — ローカルモデルを別プロセスで1・2・4個動かし、応答時間を測定・公開用に監査。
 
 ## 準備
@@ -54,9 +55,17 @@ python benchmarks/compare_four.py --model strands \
 python benchmarks/compare_four.py --model strands \
   --fixture benchmarks/clef_vs_laya_cases.json \
   --out results/strands-v21-support.json --parallel 2 4 8
+
+# v19の判定を再実行する場合は、サーバー側もv19で起動する
+python benchmarks/compare_four.py --model strands --strands-version v19 \
+  --fixture benchmarks/kiro_article_cases.json \
+  --out results/strands-v19-kiro.json --parallel
+
+# 公開済みのv19/v21結果をAPI呼び出しなしで再監査する
+python benchmarks/audit_strands_versions.py
 ```
 
-`--model`を`clef`、`laya`、`jev`に変えると同じ設問を送れます。MPSを測る場合はStrandsサーバーを`--device mps`で起動し、別の結果ファイルを指定します。測定前のローカルモデル用ウォームアップを省く場合は`--no-warmup`を付けます。
+`--model`を`clef`、`laya`、`jev`に変えると同じ設問を送れます。Strandsの既定はv21で、v19を使うときはクライアントの`--strands-version v19`とサーバーのモデル指定を揃えます。既存結果へ並列測定を追記する際も版の一致を確認します。MPSを測る場合はStrandsサーバーを`--device mps`で起動し、別の結果ファイルを指定します。測定前のローカルモデル用ウォームアップを省く場合は`--no-warmup`を付けます。
 
 ## 複数インスタンスでの応答時間を測る
 
@@ -114,4 +123,4 @@ python benchmarks/compare_four.py --model laya \
 
 通常の測定出力にはHTTPの生レスポンスが含まれ、モード600で保存されます。`results/`は原則Git管理対象外です。2026年10月6日の公開用に監査した12ファイルのみ、例外として収録しました。元の測定データに含まれていたPCの絶対パスを相対パスに置き換え、応答ヘッダーを除いています。HTTP応答本文はBase64で全件保持し、SHA-256で照合しています。記事の集計と照合するときは、同一の設問、モデル版、実行環境、サーバー設定を記録してください。
 
-10月7日のバッチ用6ファイルと複数インスタンス用3ファイルも同じ方針で監査して収録しました。バッチ用は`python benchmarks/export_batch_results.py results results/2026-10-07`で再生成できます。公開前に認証情報とPC固有のパスを確認してください。
+10月7日のバッチ用6ファイルと複数インスタンス用3ファイルも同じ方針で監査して収録しました。バッチ用は`python benchmarks/export_batch_results.py results results/2026-10-07`で再生成できます。公開用エクスポートでは保存済みの確率から最終判定を再集計します。公開前に認証情報とPC固有のパスを確認してください。

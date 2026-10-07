@@ -957,7 +957,7 @@
       "batch_latency_p95_ms": 209.959,
       "metal_peak_memory_bytes": 4623360404,
       "exact_response_matches": 0,
-      "decision_matches": 24,
+      "decision_matches": 22,
       "max_probability_delta": 0.007900000000000018,
       "max_score_delta": 0.005800000000000027,
       "records": [
@@ -1003,7 +1003,7 @@
             }
           },
           "exact_response_match": false,
-          "decision_match": true,
+          "decision_match": false,
           "max_probability_delta": 0.0041999999999999815,
           "max_score_delta": 0.005800000000000027
         },
@@ -1463,7 +1463,7 @@
             }
           },
           "exact_response_match": false,
-          "decision_match": true,
+          "decision_match": false,
           "max_probability_delta": 0.0039000000000000146,
           "max_score_delta": 0.0047000000000000375
         },
@@ -3199,7 +3199,7 @@
       "batch_latency_p95_ms": 412.395,
       "metal_peak_memory_bytes": 4640029072,
       "exact_response_matches": 0,
-      "decision_matches": 24,
+      "decision_matches": 23,
       "max_probability_delta": 0.005900000000000016,
       "max_score_delta": 0.006800000000000028,
       "records": [
@@ -3245,7 +3245,7 @@
             }
           },
           "exact_response_match": false,
-          "decision_match": true,
+          "decision_match": false,
           "max_probability_delta": 0.002799999999999969,
           "max_score_delta": 0.0040999999999999925
         },
@@ -6562,7 +6562,7 @@
       "batch_latency_p95_ms": 413.995,
       "metal_peak_memory_bytes": 4639881616,
       "exact_response_matches": 0,
-      "decision_matches": 24,
+      "decision_matches": 23,
       "max_probability_delta": 0.005900000000000016,
       "max_score_delta": 0.006800000000000028,
       "records": [
@@ -6976,7 +6976,7 @@
             }
           },
           "exact_response_match": false,
-          "decision_match": true,
+          "decision_match": false,
           "max_probability_delta": 0.002799999999999969,
           "max_score_delta": 0.0040999999999999925
         },
@@ -8804,7 +8804,7 @@
       "batch_latency_p95_ms": 210.101,
       "metal_peak_memory_bytes": 4623366164,
       "exact_response_matches": 0,
-      "decision_matches": 24,
+      "decision_matches": 22,
       "max_probability_delta": 0.007900000000000018,
       "max_score_delta": 0.005800000000000027,
       "records": [
@@ -9218,7 +9218,7 @@
             }
           },
           "exact_response_match": false,
-          "decision_match": true,
+          "decision_match": false,
           "max_probability_delta": 0.0041999999999999815,
           "max_score_delta": 0.005800000000000027
         },
@@ -9264,7 +9264,7 @@
             }
           },
           "exact_response_match": false,
-          "decision_match": true,
+          "decision_match": false,
           "max_probability_delta": 0.0039000000000000146,
           "max_score_delta": 0.0047000000000000375
         },
@@ -9925,7 +9925,7 @@
       "batch_latency_p95_ms": 208.945,
       "metal_peak_memory_bytes": 4623366932,
       "exact_response_matches": 0,
-      "decision_matches": 24,
+      "decision_matches": 22,
       "max_probability_delta": 0.007900000000000018,
       "max_score_delta": 0.005800000000000027,
       "records": [
@@ -10431,7 +10431,7 @@
             }
           },
           "exact_response_match": false,
-          "decision_match": true,
+          "decision_match": false,
           "max_probability_delta": 0.0041999999999999815,
           "max_score_delta": 0.005800000000000027
         },
@@ -10753,7 +10753,7 @@
             }
           },
           "exact_response_match": false,
-          "decision_match": true,
+          "decision_match": false,
           "max_probability_delta": 0.0039000000000000146,
           "max_score_delta": 0.0047000000000000375
         },
@@ -12167,7 +12167,7 @@
       "batch_latency_p95_ms": 423.501,
       "metal_peak_memory_bytes": 4639898000,
       "exact_response_matches": 0,
-      "decision_matches": 24,
+      "decision_matches": 23,
       "max_probability_delta": 0.005900000000000016,
       "max_score_delta": 0.006800000000000028,
       "records": [
@@ -12673,7 +12673,7 @@
             }
           },
           "exact_response_match": false,
-          "decision_match": true,
+          "decision_match": false,
           "max_probability_delta": 0.002799999999999969,
           "max_score_delta": 0.0040999999999999925
         },
@@ -14409,7 +14409,7 @@
       "batch_latency_p95_ms": 427.762,
       "metal_peak_memory_bytes": 4639914384,
       "exact_response_matches": 0,
-      "decision_matches": 24,
+      "decision_matches": 23,
       "max_probability_delta": 0.005900000000000016,
       "max_score_delta": 0.006800000000000028,
       "records": [
@@ -14593,7 +14593,7 @@
             }
           },
           "exact_response_match": false,
-          "decision_match": true,
+          "decision_match": false,
           "max_probability_delta": 0.002799999999999969,
           "max_score_delta": 0.0040999999999999925
         },
@@ -17772,7 +17772,7 @@
       "batch_latency_p95_ms": 220.711,
       "metal_peak_memory_bytes": 4617960108,
       "exact_response_matches": 0,
-      "decision_matches": 24,
+      "decision_matches": 22,
       "max_probability_delta": 0.007900000000000018,
       "max_score_delta": 0.005800000000000027,
       "records": [
@@ -17956,7 +17956,7 @@
             }
           },
           "exact_response_match": false,
-          "decision_match": true,
+          "decision_match": false,
           "max_probability_delta": 0.0041999999999999815,
           "max_score_delta": 0.005800000000000027
         },
@@ -18232,7 +18232,7 @@
             }
           },
           "exact_response_match": false,
-          "decision_match": true,
+          "decision_match": false,
           "max_probability_delta": 0.0039000000000000146,
           "max_score_delta": 0.0047000000000000375
         },
@@ -21135,7 +21135,7 @@
       "batch_latency_p95_ms": 224.205,
       "metal_peak_memory_bytes": 4623360404,
       "exact_response_matches": 0,
-      "decision_matches": 24,
+      "decision_matches": 22,
       "max_probability_delta": 0.007900000000000018,
       "max_score_delta": 0.005800000000000027,
       "records": [
@@ -21641,7 +21641,7 @@
             }
           },
           "exact_response_match": false,
-          "decision_match": true,
+          "decision_match": false,
           "max_probability_delta": 0.0041999999999999815,
           "max_score_delta": 0.005800000000000027
         },
@@ -21917,7 +21917,7 @@
             }
           },
           "exact_response_match": false,
-          "decision_match": true,
+          "decision_match": false,
           "max_probability_delta": 0.0039000000000000146,
           "max_score_delta": 0.0047000000000000375
         },
@@ -22256,7 +22256,7 @@
       "batch_latency_p95_ms": 445.211,
       "metal_peak_memory_bytes": 4639881616,
       "exact_response_matches": 0,
-      "decision_matches": 24,
+      "decision_matches": 23,
       "max_probability_delta": 0.005900000000000016,
       "max_score_delta": 0.006800000000000028,
       "records": [
@@ -22762,7 +22762,7 @@
             }
           },
           "exact_response_match": false,
-          "decision_match": true,
+          "decision_match": false,
           "max_probability_delta": 0.002799999999999969,
           "max_score_delta": 0.0040999999999999925
         },
@@ -23366,5 +23366,6 @@
         }
       ]
     }
-  ]
+  ],
+  "decision_policy": "score: highest-probability level; choice: label; noul: threshold 0.5"
 }

@@ -19,7 +19,7 @@ import urllib.error
 import urllib.request
 from pathlib import Path
 
-from compare_four import _quality, _request, _run
+from compare_four import STRANDS_IDS, _quality, _request, _run
 
 
 ROUTES = {"laya": "/v1/decision", "strands": "/v1/systemone", "clef": "/v1/systemone"}
@@ -80,6 +80,11 @@ def main() -> None:
     parser.add_argument("--port-base", type=int, default=8120)
     parser.add_argument("--startup-timeout", type=float, default=180)
     args = parser.parse_args()
+    model_id = None
+    if args.model_kind == "strands":
+        model_id = args.model.rstrip("/").split("/")[-1]
+        if model_id not in STRANDS_IDS.values():
+            parser.error("Strands --model must identify a supported v19 or v21 checkpoint")
     if (not args.python.is_file() or args.repeats < 1 or args.startup_timeout <= 0
             or any(value < 1 for value in args.replicas + args.concurrency)
             or len(set(args.replicas)) != len(args.replicas)
@@ -98,6 +103,7 @@ def main() -> None:
     result = {
         "model": args.model_kind,
         "model_snapshot": args.model.rstrip("/").split("/")[-1],
+        "model_id_requested": model_id,
         "fixture": f"benchmarks/{args.fixture.name}",
         "model_instances": args.replicas,
         "concurrency_levels": args.concurrency,
@@ -140,9 +146,10 @@ def main() -> None:
                 urls = [f"http://127.0.0.1:{port}{ROUTES[args.model_kind]}" for port in ports]
                 warmups = []
                 for index, url in enumerate(urls):
-                    record = _request(args.model_kind, cases[0], questions, None, url)
+                    record = _request(args.model_kind, cases[0], questions, None, url, model_id=model_id)
                     record["replica_index"] = index
-                    if record.get("status") != 200 or record.get("inference_batch_size") != 1:
+                    if (record.get("status") != 200 or record.get("inference_batch_size") != 1
+                            or (model_id and record.get("model_id_match") is not True)):
                         raise RuntimeError("local replica warmup failed")
                     warmups.append(record)
                 group = {"replicas": count, "warmups": warmups, "runs": []}
@@ -151,9 +158,11 @@ def main() -> None:
                     random.Random(20261007 + trial * 31).shuffle(levels)
                     for workers in levels:
                         run = _run(args.model_kind, cases, questions, None, workers, urls=urls,
-                                   shuffle_seed=20261007 + trial * 37 + workers)
+                                   shuffle_seed=20261007 + trial * 37 + workers, model_id=model_id)
                         if (run["ok"] != len(cases) or any(
-                            record.get("inference_batch_size") != 1 for record in run["records"]
+                            record.get("inference_batch_size") != 1
+                            or (model_id and record.get("model_id_match") is not True)
+                            for record in run["records"]
                         )):
                             raise RuntimeError("replica run had failed requests or implicit batching")
                         run["trial"] = trial + 1

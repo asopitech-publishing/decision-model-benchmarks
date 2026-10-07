@@ -28406,5 +28406,6 @@
         }
       ]
     }
-  ]
+  ],
+  "decision_policy": "score: highest-probability level; choice: label; noul: threshold 0.5"
 }

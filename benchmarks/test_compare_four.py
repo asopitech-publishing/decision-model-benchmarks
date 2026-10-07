@@ -130,7 +130,7 @@ class RawCaptureTests(unittest.TestCase):
             self.assertEqual(saved["warmup_policy"], "none")
 
     def test_local_default_still_warms_up(self) -> None:
-        raw = b'{"model":"strands","answers":{"ok":{"noul":0.9}},"usage":{"input_tokens":123}}'
+        raw = b'{"model":"strands-decider-2B-hobson-v21","answers":{"ok":{"noul":0.9}},"usage":{"input_tokens":123}}'
         fixture = {"cases": [{**self.case, "gold": {"ok": True}}], "questions": self.questions}
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
@@ -152,15 +152,60 @@ class RawCaptureTests(unittest.TestCase):
         cases = [{"id": str(index), "state": "hello"} for index in range(4)]
         urls = ["http://127.0.0.1:9001/v1/systemone", "http://127.0.0.1:9002/v1/systemone"]
 
-        def fake_request(_model, case, _questions, _key, url=None):
+        def fake_request(_model, case, _questions, _key, url=None, model_id=None):
             return {"id": case["id"], "status": 200, "latency_ms": 1.0,
-                    "inference_batch_size": 1, "endpoint": url}
+                    "inference_batch_size": 1, "endpoint": url, "model_id": model_id}
 
         with patch.object(compare_four, "_request", side_effect=fake_request):
             run = compare_four._run("strands", cases, self.questions, None, 2, urls=urls)
         self.assertEqual(run["ok"], 4)
         self.assertEqual([record["replica_index"] for record in run["records"]], [0, 1, 0, 1])
         self.assertEqual([record["endpoint"] for record in run["records"]], [urls[0], urls[1], urls[0], urls[1]])
+
+    def test_strands_v19_is_sent_and_saved_as_v19(self) -> None:
+        model_id = compare_four.STRANDS_IDS["v19"]
+        raw = json.dumps({"model": model_id, "answers": {"ok": {"type": "noul", "noul": 0.9}}}).encode()
+        fixture = {"cases": [{**self.case, "gold": {"ok": True}}], "questions": self.questions}
+        sent_models = []
+
+        def sender(request, **_kwargs):
+            sent_models.append(json.loads(request.data)["model"])
+            return FakeResponse(raw)
+
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            fixture_path, output_path = root / "fixture.json", root / "results.json"
+            fixture_path.write_text(json.dumps(fixture))
+            argv = ["compare_four.py", "--model", "strands", "--strands-version", "v19",
+                    "--fixture", str(fixture_path), "--out", str(output_path), "--parallel"]
+            with patch.object(sys, "argv", argv), patch.object(compare_four.urllib.request, "urlopen",
+                                                 side_effect=sender), redirect_stdout(io.StringIO()):
+                compare_four.main()
+            saved = json.loads(output_path.read_text())
+            self.assertEqual(sent_models, [model_id, model_id])
+            self.assertEqual(saved["model_id_requested"], model_id)
+            self.assertEqual(saved["sequential"]["records"][0]["response_model"], model_id)
+            with patch.object(sys, "argv", ["compare_four.py", "--model", "strands",
+                                             "--fixture", str(fixture_path), "--out", str(output_path),
+                                             "--rescore"]), redirect_stdout(io.StringIO()):
+                with self.assertRaises(SystemExit):
+                    compare_four.main()
+
+    def test_strands_rejects_server_running_other_version(self) -> None:
+        raw = b'{"model":"strands-decider-2B-hobson-v21","answers":{"ok":{"type":"noul","noul":0.9}}}'
+        fixture = {"cases": [{**self.case, "gold": {"ok": True}}], "questions": self.questions}
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            fixture_path, output_path = root / "fixture.json", root / "results.json"
+            fixture_path.write_text(json.dumps(fixture))
+            argv = ["compare_four.py", "--model", "strands", "--strands-version", "v19",
+                    "--fixture", str(fixture_path), "--out", str(output_path), "--parallel"]
+            with patch.object(sys, "argv", argv), patch.object(compare_four.urllib.request, "urlopen",
+                                                 side_effect=lambda *_args, **_kwargs: FakeResponse(raw)), redirect_stdout(io.StringIO()):
+                with self.assertRaises(SystemExit):
+                    compare_four.main()
+            saved = json.loads(output_path.read_text())
+            self.assertFalse(saved["sequential"]["records"][0]["model_id_match"])
 
 
 if __name__ == "__main__":

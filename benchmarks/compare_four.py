@@ -35,6 +35,8 @@ MODEL_IDS = {
     "laya": "laya-multilingual-q8",
     "jev": "jev-latest",
 }
+STRANDS_IDS = {version: f"strands-decider-2B-hobson-{version}"
+               for version in ("v19", "v21")}
 
 
 def _key() -> str | None:
@@ -65,10 +67,10 @@ def _percentile(values: list[float], quantile: float) -> float | None:
 
 
 def _request(model: str, case: dict, questions: dict, key: str | None,
-             url: str | None = None) -> dict:
+             url: str | None = None, model_id: str | None = None) -> dict:
     body = {"state": case["state"], "questions": questions}
     if model != "laya":
-        body["model"] = MODEL_IDS[model]
+        body["model"] = model_id or MODEL_IDS[model]
     headers = {"Content-Type": "application/json"}
     if model == "jev":
         headers["Authorization"] = f"Bearer {key}"
@@ -107,6 +109,8 @@ def _request(model: str, case: dict, questions: dict, key: str | None,
     if status == 200 and isinstance(data, dict):
         record["answers"] = data.get("answers")
         record["response_model"] = data.get("model")
+        if model == "strands":
+            record["model_id_match"] = data.get("model") == body["model"]
         record["server_latency_ms"] = data.get("latency_ms")
         record["usage"] = data.get("usage")
     return record
@@ -163,7 +167,8 @@ def _quality(records: list[dict], cases: list[dict], questions: dict) -> dict:
 
 
 def _run(model: str, cases: list[dict], questions: dict, key: str | None, workers: int,
-         urls: list[str] | None = None, shuffle_seed: int | None = None) -> dict:
+         urls: list[str] | None = None, shuffle_seed: int | None = None,
+         model_id: str | None = None) -> dict:
     ordered = list(cases)
     random.Random(shuffle_seed if shuffle_seed is not None else 20261006 + workers).shuffle(ordered)
     if urls is not None and not urls:
@@ -172,9 +177,9 @@ def _run(model: str, cases: list[dict], questions: dict, key: str | None, worker
     def send(index_case):
         index, case = index_case
         if urls is None:
-            return _request(model, case, questions, key)
+            return _request(model, case, questions, key, model_id=model_id)
         replica_index = index % len(urls)
-        record = _request(model, case, questions, key, urls[replica_index])
+        record = _request(model, case, questions, key, urls[replica_index], model_id=model_id)
         record["replica_index"] = replica_index
         return record
 
@@ -199,6 +204,8 @@ def _run(model: str, cases: list[dict], questions: dict, key: str | None, worker
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--model", choices=URLS, required=True)
+    parser.add_argument("--strands-version", choices=STRANDS_IDS, default=None,
+                        help="Strands checkpoint version (default: v21)")
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--fixture", type=Path, default=DEFAULT_FIXTURE)
     parser.add_argument("--parallel", type=int, nargs="*", default=[2, 4, 8])
@@ -208,20 +215,25 @@ def main() -> None:
     parser.add_argument("--no-warmup", action="store_true",
                         help="skip the extra warmup request for local models (Jev never warms up)")
     args = parser.parse_args()
+    if args.strands_version and args.model != "strands":
+        parser.error("--strands-version applies only to --model strands")
+    model_id = (STRANDS_IDS[args.strands_version or "v21"] if args.model == "strands"
+                else MODEL_IDS[args.model])
     if args.rescore and args.append_parallel:
         parser.error("--rescore and --append-parallel cannot be combined")
     fixture = json.loads(args.fixture.read_text())
     cases, questions = fixture["cases"], fixture["questions"]
     if args.rescore:
         result = json.loads(args.out.read_text())
-        if result["model"] != args.model:
-            parser.error("--model does not match the existing output")
+        if result["model"] != args.model or result.get("model_id_requested") != model_id:
+            parser.error("model or Strands version does not match the existing output")
         sequential, parallel = result["sequential"], result["parallel"]
         result["quality"] = _quality(sequential["records"], cases, questions)
     elif args.append_parallel:
         result = json.loads(args.out.read_text())
-        if result["model"] != args.model or result["fixture"] != str(args.fixture.resolve()):
-            parser.error("Existing output does not match --model and --fixture")
+        if (result["model"] != args.model or result.get("model_id_requested") != model_id
+                or result["fixture"] != str(args.fixture.resolve())):
+            parser.error("Existing output does not match model, Strands version, and fixture")
         sequential = result["sequential"]
         if sequential["ok"] != len(cases):
             parser.error("Existing sequential run is incomplete")
@@ -232,7 +244,7 @@ def main() -> None:
         key = _key() if args.model == "jev" else None
         if args.model == "jev" and not key:
             parser.error(f"Set TYPESAFE_API_KEY or create {HERE / '.env.local'} (mode 600)")
-        parallel = result["parallel"] + [_run(args.model, cases, questions, key, workers)
+        parallel = result["parallel"] + [_run(args.model, cases, questions, key, workers, model_id=model_id)
                                          for workers in requested]
         result["parallel"] = parallel
     else:
@@ -241,11 +253,11 @@ def main() -> None:
             parser.error(f"Set TYPESAFE_API_KEY or create {HERE / '.env.local'} (mode 600)")
         # Jev charges for every input token. Its first real request works without
         # initialization, and no benefit from a separate paid warmup is established.
-        warmup = None if args.model == "jev" or args.no_warmup else _request(args.model, cases[0], questions, key)
-        sequential = _run(args.model, cases, questions, key, 1)
-        parallel = [_run(args.model, cases, questions, key, workers)
+        warmup = None if args.model == "jev" or args.no_warmup else _request(args.model, cases[0], questions, key, model_id=model_id)
+        sequential = _run(args.model, cases, questions, key, 1, model_id=model_id)
+        parallel = [_run(args.model, cases, questions, key, workers, model_id=model_id)
                     for workers in args.parallel if workers > 1]
-        result = {"model": args.model, "model_id_requested": MODEL_IDS[args.model],
+        result = {"model": args.model, "model_id_requested": model_id,
                   "fixture": str(args.fixture.resolve()), "question_count_per_request": len(questions),
                   "timestamp_utc": __import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat(),
                   "quality": _quality(sequential["records"], cases, questions),
@@ -260,6 +272,12 @@ def main() -> None:
                       "runs": [{k: run[k] for k in ("concurrency", "ok", "n", "throughput_ok_rps",
                                                     "client_latency_p50_ms", "client_latency_p95_ms", "statuses")}
                                for run in [sequential, *parallel]]}, ensure_ascii=False))
+    if not args.rescore and args.model == "strands" and any(
+        record.get("model_id_match") is not True
+        for record in ([result["warmup"]] if result.get("warmup") is not None else [])
+        + [record for run in [sequential, *parallel] for record in run["records"]]
+    ):
+        raise SystemExit("Strands server response model does not match requested checkpoint; raw results were saved")
     if not args.rescore and ((result.get("warmup") is not None and result["warmup"].get("status") != 200)
                              or sequential["ok"] != len(cases)):
         raise SystemExit("Benchmark incomplete: warmup or sequential requests failed; raw results were saved")

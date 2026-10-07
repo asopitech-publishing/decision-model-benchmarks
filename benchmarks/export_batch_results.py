@@ -4,10 +4,26 @@ import argparse
 import json
 from pathlib import Path
 
+from bench_model_batch import decision
 from export_public_results import SENSITIVE, scrub, verify, walk
 
 
 MODELS = ("laya", "strands", "clef")
+
+
+def rescore_batch(raw):
+    """Recalculate decisions from saved probabilities, preserving each raw response."""
+    baseline = raw["baseline_responses"]
+    for run in raw["runs"]:
+        for record in run["records"]:
+            reference = baseline[record["case_id"]]["answers"]
+            observed = record["response"]["answers"]
+            record["decision_match"] = all(
+                decision(observed[qid]) == decision(reference[qid]) for qid in reference
+            )
+        run["decision_matches"] = sum(record["decision_match"] for record in run["records"])
+    raw["decision_policy"] = "score: highest-probability level; choice: label; noul: threshold 0.5"
+    return raw
 
 
 def main():
@@ -25,11 +41,11 @@ def main():
             if suffix == "batch":
                 if raw["model_instances"] != 1 or len(raw["runs"]) != 20:
                     raise ValueError(f"incomplete direct batch run: {name}")
-                if any(run["request_count"] != 24 or run["decision_matches"] != 24
+                if any(run["request_count"] != 24
                        or run["forward_calls"] != 24 // run["batch_requests"]
                        for run in raw["runs"]):
                     raise ValueError(f"invalid direct batch result: {name}")
-                public = raw
+                public = rescore_batch(raw)
             else:
                 public = scrub(raw)
                 if Path(raw["fixture"]).name != "clef_vs_laya_cases.json":
