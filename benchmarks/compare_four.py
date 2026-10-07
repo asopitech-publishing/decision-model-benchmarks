@@ -64,7 +64,8 @@ def _percentile(values: list[float], quantile: float) -> float | None:
     return round(ordered[lower] + (ordered[upper] - ordered[lower]) * (position - lower), 2)
 
 
-def _request(model: str, case: dict, questions: dict, key: str | None) -> dict:
+def _request(model: str, case: dict, questions: dict, key: str | None,
+             url: str | None = None) -> dict:
     body = {"state": case["state"], "questions": questions}
     if model != "laya":
         body["model"] = MODEL_IDS[model]
@@ -73,7 +74,7 @@ def _request(model: str, case: dict, questions: dict, key: str | None) -> dict:
         headers["Authorization"] = f"Bearer {key}"
     request_bytes = json.dumps(body, ensure_ascii=False).encode("utf-8")
     req = urllib.request.Request(
-        URLS[model], data=request_bytes,
+        url or URLS[model], data=request_bytes,
         headers=headers, method="POST",
     )
     started = time.perf_counter()
@@ -161,15 +162,28 @@ def _quality(records: list[dict], cases: list[dict], questions: dict) -> dict:
             "mismatches": drift}
 
 
-def _run(model: str, cases: list[dict], questions: dict, key: str | None, workers: int) -> dict:
+def _run(model: str, cases: list[dict], questions: dict, key: str | None, workers: int,
+         urls: list[str] | None = None, shuffle_seed: int | None = None) -> dict:
     ordered = list(cases)
-    random.Random(20261006 + workers).shuffle(ordered)
+    random.Random(shuffle_seed if shuffle_seed is not None else 20261006 + workers).shuffle(ordered)
+    if urls is not None and not urls:
+        raise ValueError("urls must not be empty")
+
+    def send(index_case):
+        index, case = index_case
+        if urls is None:
+            return _request(model, case, questions, key)
+        replica_index = index % len(urls)
+        record = _request(model, case, questions, key, urls[replica_index])
+        record["replica_index"] = replica_index
+        return record
+
     started = time.perf_counter()
     if workers == 1:
-        records = [_request(model, case, questions, key) for case in ordered]
+        records = [send(item) for item in enumerate(ordered)]
     else:
         with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as pool:
-            records = list(pool.map(lambda case: _request(model, case, questions, key), ordered))
+            records = list(pool.map(send, enumerate(ordered)))
     wall_s = time.perf_counter() - started
     succeeded = [record for record in records if record.get("status") == 200]
     latencies = [record["latency_ms"] for record in succeeded]

@@ -148,6 +148,20 @@ class RawCaptureTests(unittest.TestCase):
             self.assertEqual(saved["warmup_policy"], "one")
             self.assertEqual(base64.b64decode(saved["warmup"]["raw_response_base64"]), raw)
 
+    def test_replica_run_routes_to_distinct_endpoints(self) -> None:
+        cases = [{"id": str(index), "state": "hello"} for index in range(4)]
+        urls = ["http://127.0.0.1:9001/v1/systemone", "http://127.0.0.1:9002/v1/systemone"]
+
+        def fake_request(_model, case, _questions, _key, url=None):
+            return {"id": case["id"], "status": 200, "latency_ms": 1.0,
+                    "inference_batch_size": 1, "endpoint": url}
+
+        with patch.object(compare_four, "_request", side_effect=fake_request):
+            run = compare_four._run("strands", cases, self.questions, None, 2, urls=urls)
+        self.assertEqual(run["ok"], 4)
+        self.assertEqual([record["replica_index"] for record in run["records"]], [0, 1, 0, 1])
+        self.assertEqual([record["endpoint"] for record in run["records"]], [urls[0], urls[1], urls[0], urls[1]])
+
 
 if __name__ == "__main__":
     unittest.main()
